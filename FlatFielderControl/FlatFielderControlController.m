@@ -85,6 +85,8 @@
     [self.Brightness setContinuous:YES];
     [self.Brightness setIntegerValue:0];
     self.currentBrightness = 0;
+    self.lightIsOn = false;
+    self.flipFlatIsOpen = false;
     [self setControlOff];
     
 }
@@ -156,27 +158,21 @@
 -(void) enableDisableControls: (BOOL)Enabled
 {
 
-    /*
-    [self.GotoValue setEnabled:Enabled];
-    [self.CenterButton setEnabled:Enabled];
-    [self.focuserIncrement setEnabled:Enabled];
-    [self.focuserStepper setEnabled:Enabled];
-    [self.inButton setEnabled:Enabled];
-    [self.outButton setEnabled:Enabled];
-    [self.gotoButton setEnabled:Enabled];
-    [self.centerButton setEnabled:Enabled];
-    */
+    [self.HaltButton setEnabled:Enabled];
+    [self.CloseButton setEnabled:Enabled];
+    [self.TurnOnButton setEnabled:Enabled];
+    [self.currentMotorState setStringValue:@"N/A"];
+    [self.currentCoverState setStringValue:@"N/A"];
+    
 }
 
 
 -(void) updateConnectButtonLabel
 {
-    /*
-    if (self.tcf_mode != FNONE)
+    if (self.fm_mode != NONE)
         self.ConnectButton.title = @"Disconnect";
     else
         self.ConnectButton.title = @"Connect";
-     */
 }
 
 
@@ -234,8 +230,65 @@
     uint32_t temp;
     
     temp = [self.Brightness intValue];
-    printf("Update brightness to %u\n", temp);
     self.currentBrightness = temp;
+    
+    NSMutableString *cmd = [[NSMutableString alloc] initWithString:fm_set_brightness];
+    [cmd appendFormat:@"%03d\r", temp];
+    [self.serialPort sendData:[cmd dataUsingEncoding: [NSMutableString defaultCStringEncoding] ]];
+    
+    // wait for the answer
+    [self.commandQueue addObject: [NSNumber numberWithInt: SET_BRIGHTNESS]];
+    [self startCommandiTmer: @"Setting brightness"  timeout:60];
+    
+}
+
+- (IBAction) turnLigthOn:(id)sender
+{
+    NSData *dataToSend;
+    UInt16 toDo;
+    
+    if (self.lightIsOn) {
+        dataToSend = [fm_light_off dataUsingEncoding: [NSString defaultCStringEncoding] ];
+        toDo = LIGHT_OFF;
+    }
+    else {
+        dataToSend = [fm_light_on dataUsingEncoding: [NSString defaultCStringEncoding] ];
+        toDo = LIGHT_ON;
+    }
+    
+    [self.serialPort sendData:dataToSend];
+    // wait for the answer
+    [self.commandQueue addObject: [NSNumber numberWithInt: toDo]];
+    
+}
+
+- (IBAction) openFlipFlat:(id)sender
+{
+    NSData *dataToSend;
+    UInt16 toDo;
+
+    if (self.flipFlatIsOpen) {
+        dataToSend= [fm_close dataUsingEncoding: [NSString defaultCStringEncoding] ];
+        toDo = CLOSE;
+    }
+    else {
+        dataToSend= [fm_open dataUsingEncoding: [NSString defaultCStringEncoding] ];
+        toDo = OPEN;
+    }
+    
+    [self.serialPort sendData:dataToSend];
+    // wait for the answer
+    [self.commandQueue addObject: [NSNumber numberWithInt: toDo]];
+    
+}
+
+- (IBAction) haltFlipFlat:(id)sender
+{
+    NSData *dataToSend = [fm_close dataUsingEncoding: [NSString defaultCStringEncoding] ];
+    [self.serialPort sendData:dataToSend];
+    // wait for the answer
+    [self.commandQueue addObject: [NSNumber numberWithInt: CLOSE]];
+    
 }
 
 
@@ -296,6 +349,60 @@
     UInt16 command;
     [self.statusProgress stopAnimation: self];
     [self.statusProgress setHidden:YES];
+    if([self.commandQueue queueLenght])
+        command = [[self.commandQueue takeObject ] intValue];
+    else
+        command = NONE;
+    
+    switch (command) {
+        case GET_STATE :
+            [self.serialPort close];
+            if (self.firstConnect) {
+                errorMessage = @"Error connecting to the device";
+            }
+            else {
+                errorMessage = @"Error getting state from the device";
+            }
+            break;
+
+        case OPEN :
+            errorMessage = @"Error opening Flip-Flat";
+            break;
+
+        case CLOSE :
+            errorMessage = @"Error closing Flip-Flat";
+            break;
+            
+        case LIGHT_ON :
+            errorMessage = @"Error swicthing light on";
+            break;
+            
+        case LIGHT_OFF :
+            errorMessage = @"Error swicthing light off";
+            break;
+            
+        case SET_BRIGHTNESS :
+            errorMessage = @"Error setting brightness";
+            break;
+            
+        case GET_BRIGHTNESS :
+            errorMessage = @"Error getting brightness";
+            break;
+
+        case GET_VERSION :
+            errorMessage = @"Error getting firmware version";
+            break;
+            
+    }
+    [self.statusField setStringValue:errorMessage];
+    [self.statusField setTextColor: [NSColor redColor]];
+    // do we want to cancel all the other commands ?
+    [self.commandQueue emptyQueue ];
+    
+#ifdef DEBUG
+    NSLog(@"current data buffer content : \n%@", self.currentBuffer);
+#endif
+    self.currentBuffer = @"";
 }
 
 

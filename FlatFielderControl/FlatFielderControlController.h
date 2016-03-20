@@ -24,7 +24,9 @@
 #pragma mark - Control Outlets
 @property (unsafe_unretained) IBOutlet NSPopUpButton *SerialDropdown;
 @property (unsafe_unretained) IBOutlet NSButton *ConnectButton;
-@property (unsafe_unretained) IBOutlet NSButton *RefreshButton;
+@property (unsafe_unretained) IBOutlet NSButton *HaltButton;
+@property (unsafe_unretained) IBOutlet NSButton *CloseButton;
+@property (unsafe_unretained) IBOutlet NSButton *TurnOnButton;
 @property (unsafe_unretained) IBOutlet NSWindow *flatFielderControllWindow;
 @property (unsafe_unretained) IBOutlet NSSliderCell *Brightness;
 
@@ -40,10 +42,14 @@
 @property (nonatomic, readwrite) NSInteger versionMinor;
 @property (nonatomic, readwrite) NSInteger versionBugFix;
 @property (nonatomic, readwrite) UInt16 currentBrightness;
+@property (unsafe_unretained) IBOutlet NSTextField *currentMotorState;
+@property (unsafe_unretained) IBOutlet NSTextField *currentCoverState;
 @property (unsafe_unretained) IBOutlet NSTextField *statusField;
 @property (unsafe_unretained) IBOutlet NSProgressIndicator *statusProgress;
 @property (nonatomic, readwrite) NSString *currentBuffer;
 @property (nonatomic, readwrite) bool firstConnect;
+@property (nonatomic, readwrite) bool lightIsOn;
+@property (nonatomic, readwrite) bool flipFlatIsOpen;
 
 #pragma mark - Methods
 - (void) awakeFromNib;
@@ -52,6 +58,9 @@
 
 - (IBAction) connectToFlatman:(id)sender;
 - (IBAction) updateBrightness:(id)sender;
+- (IBAction) turnLigthOn:(id)sender;
+- (IBAction) openFlipFlat:(id)sender;
+- (IBAction) haltFlipFlat:(id)sender;
 
 - (BOOL) isANumber: (NSString *)string;
 - (void) updateConnectButtonLabel;

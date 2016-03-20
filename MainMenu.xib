@@ -680,20 +680,6 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="53b-j0-1EI">
-                        <rect key="frame" x="87" y="281" width="92" height="32"/>
-                        <buttonCell key="cell" type="push" title="Refresh" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="4c5-v6-ems">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                    </button>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PBS-CZ-z25">
-                        <rect key="frame" x="169" y="281" width="92" height="32"/>
-                        <buttonCell key="cell" type="push" title="Connect" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="fXd-WI-BWM">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                    </button>
                     <box autoresizesSubviews="NO" fixedFrame="YES" title="Status" borderType="line" translatesAutoresizingMaskIntoConstraints="NO" id="13w-mT-R8w">
                         <rect key="frame" x="17" y="16" width="359" height="49"/>
                         <view key="contentView" id="YsW-hA-bcC">
@@ -800,14 +786,6 @@
                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                     </textFieldCell>
                                 </textField>
-                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YzF-bw-0gE">
-                                    <rect key="frame" x="105" y="103" width="58" height="17"/>
-                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="C_STATE" id="AOS-9b-WlV">
-                                        <font key="font" metaFont="system"/>
-                                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                    </textFieldCell>
-                                </textField>
                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GTT-eX-4oJ">
                                     <rect key="frame" x="105" y="78" width="60" height="17"/>
                                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="M_STATE" id="mqi-wQ-GG6">
@@ -830,11 +808,29 @@
                                         <font key="font" metaFont="system"/>
                                     </buttonCell>
                                 </button>
+                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YzF-bw-0gE">
+                                    <rect key="frame" x="105" y="103" width="58" height="17"/>
+                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="C_STATE" id="AOS-9b-WlV">
+                                        <font key="font" metaFont="system"/>
+                                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                </textField>
                             </subviews>
                         </view>
                         <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
                         <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     </box>
+                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PBS-CZ-z25">
+                        <rect key="frame" x="87" y="284" width="92" height="32"/>
+                        <buttonCell key="cell" type="push" title="Connect" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="fXd-WI-BWM">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="connectToFlatman:" target="k4w-Jx-NUI" id="iWg-ag-FWM"/>
+                        </connections>
+                    </button>
                 </subviews>
             </view>
             <point key="canvasLocation" x="608.5" y="635.5"/>
@@ -847,7 +843,13 @@
         <customObject id="k4w-Jx-NUI" customClass="FlatFielderControlController">
             <connections>
                 <outlet property="Brightness" destination="Qt5-rt-mbj" id="uus-Vd-wIE"/>
+                <outlet property="CloseButton" destination="EXU-5O-qYQ" id="dka-ox-gew"/>
+                <outlet property="ConnectButton" destination="PBS-CZ-z25" id="lMh-Fg-jfE"/>
+                <outlet property="HaltButton" destination="WCo-vz-s3A" id="YNp-W2-68S"/>
                 <outlet property="SerialDropdown" destination="389-be-jK6" id="hcU-yI-ynm"/>
+                <outlet property="TurnOnButton" destination="HdA-Gp-mX6" id="Uih-6P-tRA"/>
+                <outlet property="currentCoverState" destination="YzF-bw-0gE" id="iPf-Kk-cvi"/>
+                <outlet property="currentMotorState" destination="GTT-eX-4oJ" id="NUZ-WL-7Og"/>
                 <outlet property="flatFielderControllWindow" destination="F0z-JX-Cv5" id="QES-wy-XBX"/>
                 <outlet property="statusField" destination="93Z-WP-qwA" id="3Wh-KG-ZOx"/>
                 <outlet property="statusProgress" destination="Ibi-3c-X6W" id="O5R-u0-6EY"/>
