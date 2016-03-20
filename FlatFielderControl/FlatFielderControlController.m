@@ -25,9 +25,7 @@
                 self.commandQueue = nil;
             if (self.responseQueue)
                 self.responseQueue = nil;
-
-//            [self.serialPort sendData:[focuser_free_mode dataUsingEncoding: [NSString defaultCStringEncoding] ]];
-            sleep(1);
+            self.fm_mode = NONE;
             [self.serialPort close];
             
         };
@@ -74,8 +72,6 @@
     self.firstFREADX = true;
     self.firstConnect = true;
     self.shouldDisconnect = false;
-    self.commandQueue = [[Queue alloc] init];
-    self.responseQueue = [[Queue alloc] init];
     [self.focuserStepper setMinValue: 1];
     [self.focuserStepper setMaxValue: 1000];
     self.focuserTempCompData = malloc(sizeof(TCF_tempCompData_type));
@@ -84,6 +80,8 @@
         [NSApp terminate:self];
     }
      */
+    self.commandQueue = [[Queue alloc] init];
+    self.responseQueue = [[Queue alloc] init];
     [self.Brightness setContinuous:YES];
     [self.Brightness setIntegerValue:0];
     self.currentBrightness = 0;
@@ -192,7 +190,43 @@
     
     NSString *status =@"";
     int i;
+
+    // disconnect from the focuser
+    if (self.fm_mode != NONE) {
+        if (self.serialPort.isOpen) {
+            [self stopTimeoutTimer];
+            // close the port
+            [self.serialPort close];
+            self.fm_mode = NONE;
+            [self updateConnectButtonLabel];
+        }
+    }
+    else {
+        // is there already a connect command in the queue
+        for (i=0; i< [self.commandQueue queueLenght]; i++) {
+            if ( [self.commandQueue objectAtIndex:i] == [NSNumber numberWithInt: GET_STATE])
+                return;
+        }
+        
+        // connect to the focuser
+        // set the port speed, stopbit, ...
+        self.serialPort.baudRate = [NSNumber numberWithInteger:9600];
+        self.serialPort.numberOfStopBits = (NSUInteger)1;
+        self.serialPort.parity = ORSSerialPortParityNone;
+        
+        [self.serialPort open];
+        self.currentBuffer=@"";
+        NSData *dataToSend = [fm_get_state dataUsingEncoding: [NSString defaultCStringEncoding] ];
+        [self.serialPort sendData:dataToSend];
+        // wait for the answer
+        [self.commandQueue addObject: [NSNumber numberWithInt: GET_STATE]];
+        
+        status = @"Connecting to device";
+        self.firstConnect = true;
+    }
     
+    [self startCommandiTmer:status  timeout:5.0];
+
 }
 
 - (IBAction)updateBrightness:(id)sender
@@ -276,9 +310,6 @@
 #endif
     // we only use the 1st or 2 st caracter to check what response we got.
     // this is only used for reponse with values.
-    // this allow for response to be enterlaced as in mode A and B we might
-    // receive data as we're sending a command and then get an response
-    // after the T and P data from these mode.
     if ([response length]>2)
         resp_cmd3 = [response substringWithRange:NSMakeRange(0,3)];
     
@@ -397,7 +428,45 @@
     */
 }
 
+- (void) processFlatmanResponsePing:(NSString *)response
+{
+    
+}
 
+- (void) processFlatmanResponseCclose:(NSString *)response
+{
+    
+}
+
+- (void) processFlatmanResponseLightOn:(NSString *)response
+{
+    
+}
+
+- (void) processFlatmanResponseLightOff:(NSString *)response
+{
+    
+}
+
+- (void) processFlatmanResponseSetBrightness:(NSString *)response
+{
+    
+}
+
+- (void) processFlatmanResponseGetBrightness:(NSString *)response
+{
+    
+}
+
+- (void) processFlatmanResponseGetState:(NSString *)response
+{
+    
+}
+
+- (void) processFlatmanResponseGetVersion:(NSString *)response
+{
+    
+}
 
 
 #pragma mark - ORSSerialPortDelegate Methods

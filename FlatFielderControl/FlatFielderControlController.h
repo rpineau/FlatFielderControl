@@ -29,6 +29,7 @@
 @property (unsafe_unretained) IBOutlet NSSliderCell *Brightness;
 
 #pragma mark - internal variables
+@property (nonatomic, readwrite) UInt16 fm_mode;
 @property (nonatomic, readwrite) Queue *commandQueue;
 @property (nonatomic, readwrite) Queue *responseQueue;
 @property (nonatomic, strong) ORSSerialPortManager *serialPortManager;
@@ -42,6 +43,7 @@
 @property (unsafe_unretained) IBOutlet NSTextField *statusField;
 @property (unsafe_unretained) IBOutlet NSProgressIndicator *statusProgress;
 @property (nonatomic, readwrite) NSString *currentBuffer;
+@property (nonatomic, readwrite) bool firstConnect;
 
 #pragma mark - Methods
 - (void) awakeFromNib;
@@ -61,5 +63,13 @@
 - (void) timeOut: (NSTimer *)timer;
 
 - (void) processFlatmanCommandResponse:(NSString *)response;
+- (void) processFlatmanResponsePing:(NSString *)response;
+- (void) processFlatmanResponseCclose:(NSString *)response;
+- (void) processFlatmanResponseLightOn:(NSString *)response;
+- (void) processFlatmanResponseLightOff:(NSString *)response;
+- (void) processFlatmanResponseSetBrightness:(NSString *)response;
+- (void) processFlatmanResponseGetBrightness:(NSString *)response;
+- (void) processFlatmanResponseGetState:(NSString *)response;
+- (void) processFlatmanResponseGetVersion:(NSString *)response;
 
 @end
