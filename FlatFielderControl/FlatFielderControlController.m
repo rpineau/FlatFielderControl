@@ -166,6 +166,11 @@
     
 }
 
+- (void) updateDeviceControls:(NSString *)response
+{
+    
+}
+
 
 -(void) updateConnectButtonLabel
 {
@@ -410,137 +415,74 @@
 -(void) processFlatmanCommandResponse:(NSString *)response
 {
     NSString *resp_cmd;
-    NSString *resp_cmd3 = nil;
 #ifdef DEBUG
     NSLog(@"current response buffer : \n%@", response);
     NSLog(@"current response len %lu", [response length]);
 #endif
-    // we only use the 1st or 2 st caracter to check what response we got.
-    // this is only used for reponse with values.
+    // we only use the 2 1st caracters to check what response we got.
     if ([response length]>2)
-        resp_cmd3 = [response substringWithRange:NSMakeRange(0,3)];
-    
-    if ([response length]>1)
         resp_cmd = [response substringWithRange:NSMakeRange(0,2)];
     else
-        resp_cmd = response;
-    /*
-    if ( [response isEqualToString:focuser_manual_mode_answer]) {
+        return;
+    if ( [resp_cmd isEqualToString:fm_ping_answer]) {
         [self stopTimeoutTimer];
-        [self processCommandResponseFMMODE:response];
+        [self processFlatmanResponsePing:response];
     }
-    else if ( [response isEqualToString:focus_in_out_answer]) {
+    else if ( [resp_cmd isEqualToString:fm_open_answer]) {
         [self stopTimeoutTimer];
-        [self timerOk: @"Connected"];
-        [self focuserFPOSRO];
+        [self processFlatmanResponseOpen:response];
     }
-    
-    else if ( [resp_cmd isEqualToString:[focuser_get_pos_answer substringWithRange:NSMakeRange(0, 2)]]) {
+    else if ( [resp_cmd isEqualToString:fm_close_answer]) {
         [self stopTimeoutTimer];
-        [self timerOk: @"Connected"];
-        [self processCommandResponseFPOSRO:response];
+        [self processFlatmanResponseClose:response];
     }
-    
-    else if ( [resp_cmd isEqualToString:[focuser_get_temp_answer substringWithRange:NSMakeRange(0, 2)]]) {
+    else if ( [resp_cmd isEqualToString:fm_light_on_answer]) {
         [self stopTimeoutTimer];
-        [self timerOk: @"Connected"];
-        [self processCommandResponseFTMPRO:response];
+        [self processFlatmanResponseLightOn:response];
     }
-    
-    else if ([response isEqualToString:focus_center_answer]) {
+    else if ( [resp_cmd isEqualToString:fm_light_off_answer]) {
         [self stopTimeoutTimer];
-        [self timerOk: @"Connected"];
-        [self focuserFPOSRO];
+        [self processFlatmanResponseLightOff:response];
     }
-    
-    else if ([response isEqualToString:focuser_sleep_answer]) {
+    else if ( [resp_cmd isEqualToString:fm_set_brightness_answer]) {
         [self stopTimeoutTimer];
-        [self timerOk: @"Sleeping"];
+        [self processFlatmanResponseSetBrightness:response];
     }
-    else if ([response isEqualToString:focuser_wakeup_answer]) {
+    else if ( [resp_cmd isEqualToString:fm_get_brightness_answer]) {
         [self stopTimeoutTimer];
-        [self timerOk: @"Connected"];
+        [self processFlatmanResponseGetBrightness:response];
     }
-    
-    // a bunch of command only respond with DONE
-    else if ([response isEqualToString:focuser_DONE_answer]) {
-        // we need to check which command we just sent
-        UInt16 command;
-        if([self.commandQueue queueLenght])
-            command = [[self.commandQueue objectAtIndex:0 ] intValue];
-        else
-            command = FNONE;
-        // stop the timeout as we know we got an answer
+    else if ( [resp_cmd isEqualToString:fm_get_state_answer]) {
         [self stopTimeoutTimer];
-        [self timerOk: @"Connected"];
-        
-        switch(command){
-            case FLAnnn :
-                // send FREADA
-                [self focuserFREADA];
-                break;
-            case FLBnnn :
-                // send FREADB
-                [self focuserFREADB];
-                break;
-            case FQUITn :
-                // nothing to do
-                break;
-            case FDAnnn :
-                // probably nothing to do
-                break;
-            case FDBnnn :
-                // probably nothing to do
-                break;
-            case FHOME :
-                // nothing to do
-                break;
-            case FZAxxn :
-                // send FtxxxA
-                break;
-            case FZBxxn :
-                // send FtxxxB
-                break;
+        if (self.firstConnect) {
+            self.firstConnect = false;
+            [self timerOk: @"Connected"];
+            self.fm_mode = CONNECTED;
+            [self updateConnectButtonLabel];
+            [self enableDisableControls:true];
+            [self updateDeviceControls:response];
         }
+        [self processFlatmanResponseGetState:response];
     }
-    else if ( [response isEqualToString:focuser_free_mode_answer]) {
-        [self processCommandResponseFFMODE:response];
+    else if ( [resp_cmd isEqualToString:fm_get_version_answer]) {
         [self stopTimeoutTimer];
-        [self setControlOff];
+        [self processFlatmanResponseGetVersion:response];
     }
-    else if (resp_cmd3) {
-        // check for A= vs A=0 respose (and same with B)
-        if ( [resp_cmd3 isEqualToString:focuser_FREADA_answer ]) {
-            [self stopTimeoutTimer];
-            [self timerOk: @"Connected"];
-            [self processCommandResponseFREADA:response];
-        }
-        else if ( [resp_cmd3 isEqualToString:focuser_FREADB_answer ]) {
-            [self stopTimeoutTimer];
-            [self timerOk: @"Connected"];
-            [self processCommandResponseFREADB:response];
-        }
-        
-        else if ( [resp_cmd isEqualToString:focuser_FTxxxA_answer ]) {
-            [self stopTimeoutTimer];
-            [self timerOk: @"Connected"];
-            [self processCommandResponseFTxxxA:response];
-        }
-        else if ( [resp_cmd isEqualToString:focuser_FTxxxA_answer ]) {
-            [self stopTimeoutTimer];
-            [self timerOk: @"Connected"];
-            [self processCommandResponseFTxxxB:response];
-        }
-    }
-    */
+ 
 }
+
 
 - (void) processFlatmanResponsePing:(NSString *)response
 {
     
 }
 
-- (void) processFlatmanResponseCclose:(NSString *)response
+- (void) processFlatmanResponseOpen:(NSString *)response
+{
+    
+}
+
+- (void) processFlatmanResponseClose:(NSString *)response
 {
     
 }

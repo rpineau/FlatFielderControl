@@ -14,7 +14,7 @@ enum { NONE=0, CONNECTED, PING, OPEN, CLOSE, LIGHT_ON, LIGHT_OFF, SET_BRIGHTNESS
 };
 
 NSString *fm_ping = @">P000\r";
-NSString *fm__answer = @"*P";
+NSString *fm_ping_answer = @"*P";
 
 NSString *fm_open = @">O000\r";
 NSString *fm_open_answer = @"*O";

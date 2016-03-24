@@ -69,11 +69,14 @@
 - (void) timerOk: (NSString*)message;
 - (void) startCommandiTmer:(NSString*)message timeout:(float)timeoutValue;
 - (void) enableDisableControls: (BOOL)Enabled;
+- (void) updateDeviceControls:(NSString *)response;
+
 - (void) timeOut: (NSTimer *)timer;
 
 - (void) processFlatmanCommandResponse:(NSString *)response;
 - (void) processFlatmanResponsePing:(NSString *)response;
-- (void) processFlatmanResponseCclose:(NSString *)response;
+- (void) processFlatmanResponseOpen:(NSString *)response;
+- (void) processFlatmanResponseClose:(NSString *)response;
 - (void) processFlatmanResponseLightOn:(NSString *)response;
 - (void) processFlatmanResponseLightOff:(NSString *)response;
 - (void) processFlatmanResponseSetBrightness:(NSString *)response;
