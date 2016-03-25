@@ -32,6 +32,10 @@
 
 #pragma mark - internal variables
 @property (nonatomic, readwrite) UInt16 fm_mode;
+@property (nonatomic, readwrite) UInt16 deviceType;
+@property (nonatomic, readwrite) UInt16 coverState;
+@property (nonatomic, readwrite) UInt16 lightState;
+@property (nonatomic, readwrite) UInt16 motorState;
 @property (nonatomic, readwrite) Queue *commandQueue;
 @property (nonatomic, readwrite) Queue *responseQueue;
 @property (nonatomic, strong) ORSSerialPortManager *serialPortManager;
@@ -42,6 +46,8 @@
 @property (nonatomic, readwrite) NSInteger versionMinor;
 @property (nonatomic, readwrite) NSInteger versionBugFix;
 @property (nonatomic, readwrite) UInt16 currentBrightness;
+@property (unsafe_unretained) IBOutlet NSTextField *Device;
+@property (unsafe_unretained) IBOutlet NSTextField *FirmwareVersion;
 @property (unsafe_unretained) IBOutlet NSTextField *currentMotorState;
 @property (unsafe_unretained) IBOutlet NSTextField *currentCoverState;
 @property (unsafe_unretained) IBOutlet NSTextField *statusField;
@@ -55,6 +61,7 @@
 - (void) awakeFromNib;
 - (void) windowWillClose:(NSNotification *)notification;
 - (void) setControlOff;
+- (void) updateDeviceType:(UInt16)devType;
 
 - (IBAction) connectToFlatman:(id)sender;
 - (IBAction) updateBrightness:(id)sender;

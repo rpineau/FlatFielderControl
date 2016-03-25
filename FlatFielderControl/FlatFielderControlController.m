@@ -166,8 +166,99 @@
     
 }
 
+- (void) updateDeviceType:(UInt16)devType
+{
+    switch (devType) {
+        case FLIPFLAP:
+            [self.Device setStringValue:@"Flip-Flat"];
+            break;
+        case FLATMANXL:
+            [self.Device setStringValue:@"Flat-Man XL"];
+            break;
+        case FLATMAN:
+            [self.Device setStringValue:@"Flat-Man"];
+            break;
+        case FLATMANL:
+            [self.Device setStringValue:@"Flat-Man L"];
+            break;
+    }
+
+}
+
 - (void) updateDeviceControls:(NSString *)response
 {
+    // *Siiqrs
+    
+    // check device type to enable/disable open/close controls
+    NSRange devRange = NSMakeRange (2,2);
+    self.deviceType = [[response substringWithRange:devRange] intValue];
+    [self updateDeviceType: self.deviceType];
+    
+    NSRange lightRange = NSMakeRange (5,1);
+    self.lightState = [[response substringWithRange:lightRange] intValue];
+
+    NSRange motorRange = NSMakeRange (4,1);
+    self.motorState = [[response substringWithRange:motorRange] intValue];
+    
+    NSRange coverRange = NSMakeRange (6,1);
+    self.coverState = [[response substringWithRange:coverRange] intValue];
+
+    if (self.deviceType == FLIPFLAP) {
+        // enable open/close controls
+        [self.HaltButton setEnabled:true];
+        [self.CloseButton setEnabled:true];
+        if (self.motorState) {
+            [self.currentMotorState setStringValue:@"Running"];
+        }
+        else {
+            [self.currentMotorState setStringValue:@"Stopped"];
+        }
+
+        switch (self.coverState ) {
+            case 0:
+                [self.currentCoverState setStringValue:@"not open/closed"];
+                self.flipFlatIsOpen = false;
+                self.CloseButton.title = @"Close";
+                break;
+                
+            case 1:
+                [self.currentCoverState setStringValue:@"closed"];
+                self.flipFlatIsOpen = false;
+                self.CloseButton.title = @"Open";
+                break;
+            
+            case 2:
+                [self.currentCoverState setStringValue:@"open"];
+                self.flipFlatIsOpen = true;
+                self.CloseButton.title = @"Close";
+                break;
+
+            case 3:
+                [self.currentCoverState setStringValue:@"timed out"];
+                self.flipFlatIsOpen = false;
+                
+                break;
+        }
+    }
+    
+    // enable light controll, set state
+    if (self.lightState) {
+        [self.TurnOnButton setEnabled:true];
+        
+        self.TurnOnButton.title = @"Turn off";
+        self.lightIsOn = true;
+        // get brightness.
+        NSData *dataToSend = [fm_get_brightness dataUsingEncoding: [NSString defaultCStringEncoding] ];
+        [self.serialPort sendData:dataToSend];
+        // wait for the answer
+        [self.commandQueue addObject: [NSNumber numberWithInt: GET_BRIGHTNESS]];
+    }
+    else {
+        [self.TurnOnButton setEnabled:true];
+        self.TurnOnButton.title = @"Turn off";
+        self.lightIsOn = false;
+    }
+
     
 }
 
@@ -232,13 +323,13 @@
 
 - (IBAction)updateBrightness:(id)sender
 {
-    uint32_t temp;
+    uint32_t brightness;
     
-    temp = [self.Brightness intValue];
-    self.currentBrightness = temp;
+    brightness = [self.Brightness intValue];
+    self.currentBrightness = brightness;
     
     NSMutableString *cmd = [[NSMutableString alloc] initWithString:fm_set_brightness];
-    [cmd appendFormat:@"%03d\r", temp];
+    [cmd appendFormat:@"%03d\r", brightness];
     [self.serialPort sendData:[cmd dataUsingEncoding: [NSMutableString defaultCStringEncoding] ]];
     
     // wait for the answer
@@ -462,7 +553,9 @@
             [self enableDisableControls:true];
             [self updateDeviceControls:response];
         }
-        [self processFlatmanResponseGetState:response];
+        else {
+            [self processFlatmanResponseGetState:response];
+        }
     }
     else if ( [resp_cmd isEqualToString:fm_get_version_answer]) {
         [self stopTimeoutTimer];
@@ -474,47 +567,66 @@
 
 - (void) processFlatmanResponsePing:(NSString *)response
 {
-    
+    // *Pii000
+    NSRange devRange = NSMakeRange (2,2);
+    self.deviceType = [[response substringWithRange:devRange] intValue];
+    [self updateDeviceType: self.deviceType];
 }
 
 - (void) processFlatmanResponseOpen:(NSString *)response
 {
+    // *Oii000
+    // does it replies when it's done opening ?
     
 }
 
 - (void) processFlatmanResponseClose:(NSString *)response
 {
-    
+    // *Cii000
+    // does it replies when it's done closing ?
 }
 
 - (void) processFlatmanResponseLightOn:(NSString *)response
 {
-    
+    // *Lii000
+    self.TurnOnButton.title = @"Turn off";
+    self.lightIsOn = true;
 }
 
 - (void) processFlatmanResponseLightOff:(NSString *)response
 {
-    
+    // *Dii000
+    self.TurnOnButton.title = @"Turn on";
+    self.lightIsOn = false;
 }
 
 - (void) processFlatmanResponseSetBrightness:(NSString *)response
 {
-    
+    // *Biixxx
+    // not sure I need to do anything here.
 }
 
 - (void) processFlatmanResponseGetBrightness:(NSString *)response
 {
-    
+    // *Jiixxx
+    NSRange brightnessRange = NSMakeRange (4,3);
+    self.currentBrightness = [[response substringWithRange:brightnessRange] intValue];
+    [self.Brightness setDoubleValue:(double)self.currentBrightness];
 }
 
 - (void) processFlatmanResponseGetState:(NSString *)response
 {
-    
+    // *Siiqrs
+    [self updateDeviceControls:response];
 }
 
 - (void) processFlatmanResponseGetVersion:(NSString *)response
 {
-    
+    // *Viivvv
+    NSString *version;
+    NSRange versionRange = NSMakeRange (3,3);
+    version = [response substringWithRange:versionRange];
+    [self.FirmwareVersion setStringValue:version];
 }
 
 
