@@ -150,6 +150,7 @@
     self.HaltButton.enabled = Enabled;
     self.CloseButton.enabled = Enabled;
     self.TurnOnButton.enabled = Enabled;
+    self.Brightness.enabled = Enabled;
     self.Device.stringValue = @"N/A";
     self.FirmwareVersion.stringValue = @"N/A";
     self.currentMotorState.stringValue = @"N/A";
@@ -581,6 +582,8 @@
     // *Lii000
     self.TurnOnButton.title = @"Turn off";
     self.lightIsOn = true;
+    self.Brightness.enabled = YES;
+
 }
 
 - (void) processFlatmanResponseLightOff:(NSString *)response
@@ -588,6 +591,7 @@
     // *Dii000
     self.TurnOnButton.title = @"Turn on";
     self.lightIsOn = false;
+    self.Brightness.enabled = NO;
 }
 
 - (void) processFlatmanResponseSetBrightness:(NSString *)response
