@@ -134,22 +134,11 @@
 
 - (void) setControlOff
 {
-    /*
-    self.tcf_mode = FNONE;
-    self.currentPosition = 0;
-    self.center_on_connect = false;
-    self.currentBuffer = nil;
-    self.timeoutTimer = nil;
-    // set the focus control with the default values
-    [self.focuserIncrement setStringValue: [NSString stringWithFormat:@"%d", self.focusStep]];
-    [self.GotoValue setStringValue: [NSString stringWithFormat:@"%d", self.currentPosition]];
-     */
-    [self.statusField setTextColor: [NSColor blackColor]];
-    [self.statusField setStringValue:@"Not connected"];
-    [self.statusField  setSelectable:YES];
-    [self.statusProgress setHidden:YES];
+    self.statusField.textColor = [NSColor blackColor];
+    self.statusField.stringValue = @"Not connected";
+    self.statusField.selectable = YES;
+    self.statusProgress.hidden = YES;
     [self.statusProgress stopAnimation: self];
-        
     // disable some control until we connect
     [self enableDisableControls: false];
     
@@ -158,28 +147,29 @@
 -(void) enableDisableControls: (BOOL)Enabled
 {
 
-    [self.HaltButton setEnabled:Enabled];
-    [self.CloseButton setEnabled:Enabled];
-    [self.TurnOnButton setEnabled:Enabled];
-    [self.currentMotorState setStringValue:@"N/A"];
-    [self.currentCoverState setStringValue:@"N/A"];
-    
+    self.HaltButton.enabled = Enabled;
+    self.CloseButton.enabled = Enabled;
+    self.TurnOnButton.enabled = Enabled;
+    self.Device.stringValue = @"N/A";
+    self.FirmwareVersion.stringValue = @"N/A";
+    self.currentMotorState.stringValue = @"N/A";
+    self.currentCoverState.stringValue = @"N/A";
 }
 
 - (void) updateDeviceType:(UInt16)devType
 {
     switch (devType) {
         case FLIPFLAP:
-            [self.Device setStringValue:@"Flip-Flat"];
+            self.Device.stringValue = @"Flip-Flat";
             break;
         case FLATMANXL:
-            [self.Device setStringValue:@"Flat-Man XL"];
+            self.Device.stringValue = @"Flat-Man XL";
             break;
         case FLATMAN:
-            [self.Device setStringValue:@"Flat-Man"];
+            self.Device.stringValue = @"Flat-Man";
             break;
         case FLATMANL:
-            [self.Device setStringValue:@"Flat-Man L"];
+            self.Device.stringValue = @"Flat-Man L";
             break;
     }
 
@@ -205,36 +195,36 @@
 
     if (self.deviceType == FLIPFLAP) {
         // enable open/close controls
-        [self.HaltButton setEnabled:true];
-        [self.CloseButton setEnabled:true];
+        self.HaltButton.enabled = true;
+        self.CloseButton.enabled = true;
         if (self.motorState) {
-            [self.currentMotorState setStringValue:@"Running"];
+            self.currentMotorState.stringValue = @"Running";
         }
         else {
-            [self.currentMotorState setStringValue:@"Stopped"];
+            self.currentMotorState.stringValue = @"Stopped";
         }
 
         switch (self.coverState ) {
             case 0:
-                [self.currentCoverState setStringValue:@"not open/closed"];
+                self.currentCoverState.stringValue = @"not open/closed";
                 self.flipFlatIsOpen = false;
                 self.CloseButton.title = @"Close";
                 break;
                 
             case 1:
-                [self.currentCoverState setStringValue:@"closed"];
+                self.currentCoverState.stringValue = @"closed";
                 self.flipFlatIsOpen = false;
                 self.CloseButton.title = @"Open";
                 break;
             
             case 2:
-                [self.currentCoverState setStringValue:@"open"];
+                self.currentCoverState.stringValue = @"open";
                 self.flipFlatIsOpen = true;
                 self.CloseButton.title = @"Close";
                 break;
 
             case 3:
-                [self.currentCoverState setStringValue:@"timed out"];
+                self.currentCoverState.stringValue = @"timed out";
                 self.flipFlatIsOpen = false;
                 
                 break;
@@ -243,7 +233,7 @@
     
     // enable light controll, set state
     if (self.lightState) {
-        [self.TurnOnButton setEnabled:true];
+        self.TurnOnButton.enabled = true;
         
         self.TurnOnButton.title = @"Turn off";
         self.lightIsOn = true;
@@ -254,7 +244,7 @@
         [self.commandQueue addObject: [NSNumber numberWithInt: GET_BRIGHTNESS]];
     }
     else {
-        [self.TurnOnButton setEnabled:true];
+        self.TurnOnButton.enabled = true;
         self.TurnOnButton.title = @"Turn off";
         self.lightIsOn = false;
     }
@@ -275,8 +265,8 @@
 - (IBAction) connectToFlatman:(id)sender
 {
     if (!self.serialPort) {
-        [self.statusField setTextColor: [NSColor redColor]];
-        [self.statusField setStringValue:@"Select a serial port before clicking \"Connect\""];
+        self.statusField.textColor = [NSColor redColor];
+        self.statusField.stringValue =@"Select a serial port before clicking \"Connect\"";
         return;
     }
     
@@ -325,7 +315,7 @@
 {
     uint32_t brightness;
     
-    brightness = [self.Brightness intValue];
+    brightness = self.Brightness.intValue;
     self.currentBrightness = brightness;
     
     NSMutableString *cmd = [[NSMutableString alloc] initWithString:fm_set_brightness];
@@ -422,9 +412,9 @@
 - (void) timerOk: (NSString*)message
 {
     [self.statusProgress stopAnimation: self];
-    [self.statusProgress setHidden:YES];
-    [self.statusField setTextColor: [NSColor blackColor]];
-    [self.statusField setStringValue:message];
+    self.statusProgress.hidden = YES;
+    self.statusField.textColor = [NSColor blackColor];
+    self.statusField.stringValue = message;
     
 }
 
@@ -432,9 +422,9 @@
 - (void) startCommandiTmer: (NSString*)message timeout:(float)timeoutValue
 {
     [self startTimeoutTimer: timeoutValue];
-    [self.statusField setTextColor: [NSColor blackColor]];
-    [self.statusField setStringValue:message];
-    [self.statusProgress setHidden:NO];
+    self.statusField.textColor = [NSColor blackColor];
+    self.statusField.stringValue = message;
+    self.statusProgress.hidden = NO;
     [self.statusProgress startAnimation: self];
     
 }
@@ -444,7 +434,7 @@
     NSString *errorMessage = @"";
     UInt16 command;
     [self.statusProgress stopAnimation: self];
-    [self.statusProgress setHidden:YES];
+    self.statusProgress.hidden = YES;
     if([self.commandQueue queueLenght])
         command = [[self.commandQueue takeObject ] intValue];
     else
@@ -490,8 +480,8 @@
             break;
             
     }
-    [self.statusField setStringValue:errorMessage];
-    [self.statusField setTextColor: [NSColor redColor]];
+    self.statusField.stringValue = errorMessage;
+    self.statusField.textColor = [NSColor redColor];
     // do we want to cancel all the other commands ?
     [self.commandQueue emptyQueue ];
     
@@ -611,7 +601,7 @@
     // *Jiixxx
     NSRange brightnessRange = NSMakeRange (4,3);
     self.currentBrightness = [[response substringWithRange:brightnessRange] intValue];
-    [self.Brightness setDoubleValue:(double)self.currentBrightness];
+    self.Brightness.doubleValue = (double)self.currentBrightness;
 }
 
 - (void) processFlatmanResponseGetState:(NSString *)response
@@ -626,7 +616,7 @@
     NSString *version;
     NSRange versionRange = NSMakeRange (3,3);
     version = [response substringWithRange:versionRange];
-    [self.FirmwareVersion setStringValue:version];
+    self.FirmwareVersion.stringValue = version;
 }
 
 
