@@ -146,7 +146,6 @@
 
 -(void) enableDisableControls: (BOOL)Enabled
 {
-
     self.HaltButton.enabled = Enabled;
     self.CloseButton.enabled = Enabled;
     self.TurnOnButton.enabled = Enabled;
@@ -231,6 +230,10 @@
                 break;
         }
     }
+    else {
+        self.HaltButton.enabled = NO;
+        self.CloseButton.enabled = NO;
+    }
     
     // enable light controll, set state
     if (self.lightState) {
@@ -246,7 +249,7 @@
     }
     else {
         self.TurnOnButton.enabled = true;
-        self.TurnOnButton.title = @"Turn off";
+        self.TurnOnButton.title = @"Turn on";
         self.lightIsOn = false;
     }
 
@@ -282,6 +285,7 @@
             [self.serialPort close];
             self.fm_mode = NONE;
             [self updateConnectButtonLabel];
+            [self timerOk: @"Disconnected"];
         }
     }
     else {
@@ -299,10 +303,10 @@
         
         [self.serialPort open];
         self.currentBuffer=@"";
-        NSData *dataToSend = [fm_get_state dataUsingEncoding: [NSString defaultCStringEncoding] ];
+        NSData *dataToSend = [fm_ping dataUsingEncoding: [NSString defaultCStringEncoding] ];
         [self.serialPort sendData:dataToSend];
         // wait for the answer
-        [self.commandQueue addObject: [NSNumber numberWithInt: GET_STATE]];
+        [self.commandQueue addObject: [NSNumber numberWithInt: PING]];
         
         status = @"Connecting to device";
         self.firstConnect = true;
@@ -315,17 +319,23 @@
 - (IBAction)updateBrightness:(id)sender
 {
     uint32_t brightness;
+    NSData *dataToSend;
     
     brightness = self.Brightness.intValue;
+    if (brightness == 0) {
+        return;
+    }
+    
     self.currentBrightness = brightness;
     
     NSMutableString *cmd = [[NSMutableString alloc] initWithString:fm_set_brightness];
-    [cmd appendFormat:@"%03d\r", brightness];
-    [self.serialPort sendData:[cmd dataUsingEncoding: [NSMutableString defaultCStringEncoding] ]];
+    [cmd appendFormat:@"%03d\n", brightness];
+    dataToSend = [cmd dataUsingEncoding: [NSMutableString defaultCStringEncoding] ];
+    [self.serialPort sendData:dataToSend];
     
     // wait for the answer
     [self.commandQueue addObject: [NSNumber numberWithInt: SET_BRIGHTNESS]];
-    [self startCommandiTmer: @"Setting brightness"  timeout:60];
+    [self startCommandiTmer: @"Setting brightness"  timeout:5.0];
     
 }
 
@@ -502,39 +512,12 @@
     NSLog(@"current response len %lu", [response length]);
 #endif
     // we only use the 2 1st caracters to check what response we got.
-    if ([response length]>2)
+    if ([response length] == 7)
         resp_cmd = [response substringWithRange:NSMakeRange(0,2)];
     else
         return;
+    
     if ( [resp_cmd isEqualToString:fm_ping_answer]) {
-        [self stopTimeoutTimer];
-        [self processFlatmanResponsePing:response];
-    }
-    else if ( [resp_cmd isEqualToString:fm_open_answer]) {
-        [self stopTimeoutTimer];
-        [self processFlatmanResponseOpen:response];
-    }
-    else if ( [resp_cmd isEqualToString:fm_close_answer]) {
-        [self stopTimeoutTimer];
-        [self processFlatmanResponseClose:response];
-    }
-    else if ( [resp_cmd isEqualToString:fm_light_on_answer]) {
-        [self stopTimeoutTimer];
-        [self processFlatmanResponseLightOn:response];
-    }
-    else if ( [resp_cmd isEqualToString:fm_light_off_answer]) {
-        [self stopTimeoutTimer];
-        [self processFlatmanResponseLightOff:response];
-    }
-    else if ( [resp_cmd isEqualToString:fm_set_brightness_answer]) {
-        [self stopTimeoutTimer];
-        [self processFlatmanResponseSetBrightness:response];
-    }
-    else if ( [resp_cmd isEqualToString:fm_get_brightness_answer]) {
-        [self stopTimeoutTimer];
-        [self processFlatmanResponseGetBrightness:response];
-    }
-    else if ( [resp_cmd isEqualToString:fm_get_state_answer]) {
         [self stopTimeoutTimer];
         if (self.firstConnect) {
             self.firstConnect = false;
@@ -544,12 +527,46 @@
             [self enableDisableControls:true];
             [self updateDeviceControls:response];
         }
-        else {
-            [self processFlatmanResponseGetState:response];
-        }
+        [self processFlatmanResponsePing:response];
+    }
+    else if ( [resp_cmd isEqualToString:fm_open_answer]) {
+        [self stopTimeoutTimer];
+        [self timerOk: @"Connected"];
+        [self processFlatmanResponseOpen:response];
+    }
+    else if ( [resp_cmd isEqualToString:fm_close_answer]) {
+        [self stopTimeoutTimer];
+        [self timerOk: @"Connected"];
+        [self processFlatmanResponseClose:response];
+    }
+    else if ( [resp_cmd isEqualToString:fm_light_on_answer]) {
+        [self stopTimeoutTimer];
+        [self timerOk: @"Connected"];
+        [self processFlatmanResponseLightOn:response];
+    }
+    else if ( [resp_cmd isEqualToString:fm_light_off_answer]) {
+        [self stopTimeoutTimer];
+        [self timerOk: @"Connected"];
+        [self processFlatmanResponseLightOff:response];
+    }
+    else if ( [resp_cmd isEqualToString:fm_set_brightness_answer]) {
+        [self stopTimeoutTimer];
+        [self timerOk: @"Connected"];
+        [self processFlatmanResponseSetBrightness:response];
+    }
+    else if ( [resp_cmd isEqualToString:fm_get_brightness_answer]) {
+        [self stopTimeoutTimer];
+        [self timerOk: @"Connected"];
+        [self processFlatmanResponseGetBrightness:response];
+    }
+    else if ( [resp_cmd isEqualToString:fm_get_state_answer]) {
+        [self stopTimeoutTimer];
+        [self timerOk: @"Connected"];
+        [self processFlatmanResponseGetState:response];
     }
     else if ( [resp_cmd isEqualToString:fm_get_version_answer]) {
         [self stopTimeoutTimer];
+        [self timerOk: @"Connected"];
         [self processFlatmanResponseGetVersion:response];
     }
  
@@ -562,6 +579,12 @@
     NSRange devRange = NSMakeRange (2,2);
     self.deviceType = [[response substringWithRange:devRange] intValue];
     [self updateDeviceType: self.deviceType];
+    NSData *dataToSend = [fm_get_state dataUsingEncoding: [NSString defaultCStringEncoding] ];
+    [self.serialPort sendData:dataToSend];
+    // wait for the answer
+    [self.commandQueue addObject: [NSNumber numberWithInt: GET_STATE]];
+    [self startCommandiTmer: @"Getting state"  timeout:5.0];
+
 }
 
 - (void) processFlatmanResponseOpen:(NSString *)response
@@ -612,6 +635,13 @@
 {
     // *Siiqrs
     [self updateDeviceControls:response];
+    NSData *dataToSend = [fm_get_version dataUsingEncoding: [NSString defaultCStringEncoding] ];
+    [self.serialPort sendData:dataToSend];
+    // wait for the answer
+    [self.commandQueue addObject: [NSNumber numberWithInt: GET_VERSION]];
+    [self startCommandiTmer: @"Getting firmware version"  timeout:5.0];
+
+
 }
 
 - (void) processFlatmanResponseGetVersion:(NSString *)response
@@ -645,7 +675,7 @@
         return;
     
     self.currentBuffer = [self.currentBuffer stringByAppendingString:string];
-    NSArray *dataChunk = [self.currentBuffer componentsSeparatedByString:@"\n\r"];
+    NSArray *dataChunk = [self.currentBuffer componentsSeparatedByString:@"\n"];
     
     self.currentBuffer = [dataChunk lastObject];
     
