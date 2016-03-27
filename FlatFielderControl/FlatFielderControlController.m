@@ -60,6 +60,14 @@
 }
 
 
+- (NSString *)stringToHex:(NSString *)string
+{
+    char *utf8 = [string UTF8String];
+    NSMutableString *hex = [NSMutableString string];
+    while ( *utf8 ) [hex appendFormat:@"%02X" , *utf8++ & 0x00FF];
+    
+    return [NSString stringWithFormat:@"%@", hex];
+}
 
 - (void) awakeFromNib
 {
@@ -242,7 +250,7 @@
         self.TurnOnButton.title = @"Turn off";
         self.lightIsOn = true;
         // get brightness.
-        NSData *dataToSend = [fm_get_brightness dataUsingEncoding: [NSString defaultCStringEncoding] ];
+        NSData *dataToSend = [fm_get_brightness dataUsingEncoding: NSUTF8StringEncoding ];
         [self.serialPort sendData:dataToSend];
         // wait for the answer
         [self.commandQueue addObject: [NSNumber numberWithInt: GET_BRIGHTNESS]];
@@ -286,12 +294,13 @@
             self.fm_mode = NONE;
             [self updateConnectButtonLabel];
             [self timerOk: @"Disconnected"];
+            [self.commandQueue emptyQueue ];
         }
     }
     else {
         // is there already a connect command in the queue
         for (i=0; i< [self.commandQueue queueLenght]; i++) {
-            if ( [self.commandQueue objectAtIndex:i] == [NSNumber numberWithInt: GET_STATE])
+            if ( [self.commandQueue objectAtIndex:i] == [NSNumber numberWithInt: PING])
                 return;
         }
         
@@ -300,19 +309,23 @@
         self.serialPort.baudRate = [NSNumber numberWithInteger:9600];
         self.serialPort.numberOfStopBits = (NSUInteger)1;
         self.serialPort.parity = ORSSerialPortParityNone;
+        self.serialPort.RTS = NO;
         
         [self.serialPort open];
         self.currentBuffer=@"";
-        NSData *dataToSend = [fm_ping dataUsingEncoding: [NSString defaultCStringEncoding] ];
+        NSData *dataToSend = [fm_ping dataUsingEncoding: NSUTF8StringEncoding ];
+#ifdef DEBUG
+        NSLog(@"dataToSend : \n%@", dataToSend);
+#endif
         [self.serialPort sendData:dataToSend];
         // wait for the answer
         [self.commandQueue addObject: [NSNumber numberWithInt: PING]];
         
         status = @"Connecting to device";
         self.firstConnect = true;
+        [self startCommandiTmer:status  timeout:5.0];
     }
     
-    [self startCommandiTmer:status  timeout:5.0];
 
 }
 
@@ -329,8 +342,8 @@
     self.currentBrightness = brightness;
     
     NSMutableString *cmd = [[NSMutableString alloc] initWithString:fm_set_brightness];
-    [cmd appendFormat:@"%03d\n", brightness];
-    dataToSend = [cmd dataUsingEncoding: [NSMutableString defaultCStringEncoding] ];
+    [cmd appendFormat:@"%03d\r", brightness];
+    dataToSend = [cmd dataUsingEncoding: NSUTF8StringEncoding];
     [self.serialPort sendData:dataToSend];
     
     // wait for the answer
@@ -345,11 +358,11 @@
     UInt16 toDo;
     
     if (self.lightIsOn) {
-        dataToSend = [fm_light_off dataUsingEncoding: [NSString defaultCStringEncoding] ];
+        dataToSend = [fm_light_off dataUsingEncoding: NSUTF8StringEncoding ];
         toDo = LIGHT_OFF;
     }
     else {
-        dataToSend = [fm_light_on dataUsingEncoding: [NSString defaultCStringEncoding] ];
+        dataToSend = [fm_light_on dataUsingEncoding: NSUTF8StringEncoding ];
         toDo = LIGHT_ON;
     }
     
@@ -365,11 +378,11 @@
     UInt16 toDo;
 
     if (self.flipFlatIsOpen) {
-        dataToSend= [fm_close dataUsingEncoding: [NSString defaultCStringEncoding] ];
+        dataToSend= [fm_close dataUsingEncoding: NSUTF8StringEncoding ];
         toDo = CLOSE;
     }
     else {
-        dataToSend= [fm_open dataUsingEncoding: [NSString defaultCStringEncoding] ];
+        dataToSend= [fm_open dataUsingEncoding: NSUTF8StringEncoding ];
         toDo = OPEN;
     }
     
@@ -381,7 +394,7 @@
 
 - (IBAction) haltFlipFlat:(id)sender
 {
-    NSData *dataToSend = [fm_close dataUsingEncoding: [NSString defaultCStringEncoding] ];
+    NSData *dataToSend = [fm_close dataUsingEncoding: NSUTF8StringEncoding ];
     [self.serialPort sendData:dataToSend];
     // wait for the answer
     [self.commandQueue addObject: [NSNumber numberWithInt: CLOSE]];
@@ -452,14 +465,18 @@
         command = NONE;
     
     switch (command) {
-        case GET_STATE :
+        case PING :
             [self.serialPort close];
             if (self.firstConnect) {
                 errorMessage = @"Error connecting to the device";
             }
             else {
-                errorMessage = @"Error getting state from the device";
+                errorMessage = @"Error pingingthe device";
             }
+            break;
+
+        case GET_STATE :
+            errorMessage = @"Error getting state from the device";
             break;
 
         case OPEN :
@@ -509,9 +526,10 @@
     NSString *resp_cmd;
 #ifdef DEBUG
     NSLog(@"current response buffer : \n%@", response);
+    NSLog(@"currentBuffer (hex) : %@\n", [self stringToHex:response]);
     NSLog(@"current response len %lu", [response length]);
 #endif
-    // we only use the 2 1st caracters to check what response we got.
+    // all response are 7 bytes long
     if ([response length] == 7)
         resp_cmd = [response substringWithRange:NSMakeRange(0,2)];
     else
@@ -520,7 +538,6 @@
     if ( [resp_cmd isEqualToString:fm_ping_answer]) {
         [self stopTimeoutTimer];
         if (self.firstConnect) {
-            self.firstConnect = false;
             [self timerOk: @"Connected"];
             self.fm_mode = CONNECTED;
             [self updateConnectButtonLabel];
@@ -579,7 +596,7 @@
     NSRange devRange = NSMakeRange (2,2);
     self.deviceType = [[response substringWithRange:devRange] intValue];
     [self updateDeviceType: self.deviceType];
-    NSData *dataToSend = [fm_get_state dataUsingEncoding: [NSString defaultCStringEncoding] ];
+    NSData *dataToSend = [fm_get_state dataUsingEncoding: NSUTF8StringEncoding ];
     [self.serialPort sendData:dataToSend];
     // wait for the answer
     [self.commandQueue addObject: [NSNumber numberWithInt: GET_STATE]];
@@ -606,6 +623,12 @@
     self.TurnOnButton.title = @"Turn off";
     self.lightIsOn = true;
     self.Brightness.enabled = YES;
+
+    NSData *dataToSend = [fm_get_brightness dataUsingEncoding: NSUTF8StringEncoding ];
+    [self.serialPort sendData:dataToSend];
+    // wait for the answer
+    [self.commandQueue addObject: [NSNumber numberWithInt: GET_BRIGHTNESS]];
+    [self startCommandiTmer: @"Getting state"  timeout:5.0];
 
 }
 
@@ -635,12 +658,13 @@
 {
     // *Siiqrs
     [self updateDeviceControls:response];
-    NSData *dataToSend = [fm_get_version dataUsingEncoding: [NSString defaultCStringEncoding] ];
-    [self.serialPort sendData:dataToSend];
-    // wait for the answer
-    [self.commandQueue addObject: [NSNumber numberWithInt: GET_VERSION]];
-    [self startCommandiTmer: @"Getting firmware version"  timeout:5.0];
-
+    if (self.firstConnect) {
+        NSData *dataToSend = [fm_get_version dataUsingEncoding: NSUTF8StringEncoding ];
+        [self.serialPort sendData:dataToSend];
+        // wait for the answer
+        [self.commandQueue addObject: [NSNumber numberWithInt: GET_VERSION]];
+        [self startCommandiTmer: @"Getting firmware version"  timeout:5.0];
+    }
 
 }
 
@@ -651,6 +675,14 @@
     NSRange versionRange = NSMakeRange (3,3);
     version = [response substringWithRange:versionRange];
     self.FirmwareVersion.stringValue = version;
+    if (self.firstConnect) {
+        NSData *dataToSend = [fm_get_brightness dataUsingEncoding: NSUTF8StringEncoding ];
+        [self.serialPort sendData:dataToSend];
+        // wait for the answer
+        [self.commandQueue addObject: [NSNumber numberWithInt: GET_BRIGHTNESS]];
+        [self startCommandiTmer: @"Getting state"  timeout:5.0];
+        self.firstConnect = false;
+    }
 }
 
 
@@ -667,20 +699,34 @@
 - (void) serialPort:(ORSSerialPort *)serialPort didReceiveData:(NSData *)data
 {
     int i;
-    NSString *string = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
+    NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     if ([string length] == 0)
         return;
+#ifdef DEBUG
+    NSLog(@"received string : %@\n", [self stringToHex:string]);
+#endif
     
     if(!self.responseQueue && !self.commandQueue)
         return;
     
     self.currentBuffer = [self.currentBuffer stringByAppendingString:string];
+#ifdef DEBUG
+    NSLog(@"currentBuffer : %@\n", self.currentBuffer);
+    NSLog(@"currentBuffer (hex) : %@\n", [self stringToHex:self.currentBuffer]);
+#endif
+
     NSArray *dataChunk = [self.currentBuffer componentsSeparatedByString:@"\n"];
-    
+
     self.currentBuffer = [dataChunk lastObject];
+#ifdef DEBUG
+    NSLog(@"currentBuffer (hex) : %@\n", [self stringToHex:self.currentBuffer]);
+#endif
     
     for ( i=0; i<[dataChunk count]; i++) {
         NSString *s = [dataChunk objectAtIndex:i];
+#ifdef DEBUG
+        NSLog(@"s (hex) : %@\n", [self stringToHex:s]);
+#endif
         if([s length] > 0)
             [self.responseQueue addObject: [dataChunk objectAtIndex:i]];
     }

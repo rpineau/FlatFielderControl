@@ -252,13 +252,13 @@ static ORSSerialPortManager *sharedInstance = nil;
 	NSMutableArray *ports = [NSMutableArray array];
 	io_object_t eachPort;
 	while ((eachPort = IOIteratorNext(self.portPublishedNotificationIterator)))
-	{
-		ORSSerialPort *port = [ORSSerialPort serialPortWithDevice:eachPort];
+    {
+        ORSSerialPort *port = [ORSSerialPort serialPortWithDevice:eachPort];
         if ([port.name rangeOfString:@"bluetooth" options:NSCaseInsensitiveSearch].location == NSNotFound) {
             [ports addObject:port];
         }
-		IOObjectRelease(eachPort);
-	}
+        IOObjectRelease(eachPort);
+    }
 	
 	self.availablePorts = ports;
 	

@@ -58,6 +58,7 @@
 @property (nonatomic, readwrite) bool flipFlatIsOpen;
 
 #pragma mark - Methods
+- (NSString *)stringToHex:(NSString *)string;
 - (void) awakeFromNib;
 - (void) windowWillClose:(NSNotification *)notification;
 - (void) setControlOff;
