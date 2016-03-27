@@ -310,6 +310,8 @@
         self.serialPort.numberOfStopBits = (NSUInteger)1;
         self.serialPort.parity = ORSSerialPortParityNone;
         self.serialPort.RTS = NO;
+        self.serialPort.DTR = YES;
+        
         
         [self.serialPort open];
         self.currentBuffer=@"";
@@ -323,7 +325,7 @@
         
         status = @"Connecting to device";
         self.firstConnect = true;
-        [self startCommandiTmer:status  timeout:5.0];
+        [self startCommandiTmer:status  timeout:50.0];
     }
     
 

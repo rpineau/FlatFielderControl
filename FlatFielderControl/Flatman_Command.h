@@ -15,7 +15,7 @@ enum { NONE=0, CONNECTED, PING, OPEN, CLOSE, LIGHT_ON, LIGHT_OFF, SET_BRIGHTNESS
 // 99 for Flip-Flat, 19 for Flat-Man, 10 for XL, 15 Flat-Man_L
 enum { FLIPFLAP=99, FLATMAN=19, FLATMANXL=10, FLATMANL=15};
 
-NSString *fm_ping = @">P000\n\r";
+NSString *fm_ping = @">P000\r";
 NSString *fm_ping_answer = @"*P";
 
 NSString *fm_open = @">O000\r";
