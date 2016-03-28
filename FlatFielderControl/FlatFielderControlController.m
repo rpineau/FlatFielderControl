@@ -96,6 +96,8 @@
     self.lightIsOn = false;
     self.flipFlatIsOpen = false;
     [self setControlOff];
+    [self.SerialDropdown removeItemWithTitle:@"No Value"];
+    [self.SerialDropdown selectItemAtIndex:0];
     
 }
 
@@ -309,11 +311,11 @@
         self.serialPort.baudRate = [NSNumber numberWithInteger:9600];
         self.serialPort.numberOfStopBits = (NSUInteger)1;
         self.serialPort.parity = ORSSerialPortParityNone;
+        [self.serialPort open];
+        // Drop RTS
         self.serialPort.RTS = NO;
         self.serialPort.DTR = YES;
-        
-        
-        [self.serialPort open];
+
         self.currentBuffer=@"";
         NSData *dataToSend = [fm_ping dataUsingEncoding: NSUTF8StringEncoding ];
 #ifdef DEBUG
