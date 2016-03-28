@@ -259,7 +259,7 @@ static ORSSerialPortManager *sharedInstance = nil;
         }
         IOObjectRelease(eachPort);
     }
-	
+
 	self.availablePorts = ports;
 	
 	// Also register for removal

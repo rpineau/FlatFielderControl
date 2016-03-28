@@ -325,7 +325,7 @@
         
         status = @"Connecting to device";
         self.firstConnect = true;
-        [self startCommandiTmer:status  timeout:50.0];
+        [self startCommandiTmer:status  timeout:5.0];
     }
     
 
