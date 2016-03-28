@@ -62,7 +62,7 @@
 
 - (NSString *)stringToHex:(NSString *)string
 {
-    char *utf8 = [string UTF8String];
+    const char *utf8 = [string UTF8String];
     NSMutableString *hex = [NSMutableString string];
     while ( *utf8 ) [hex appendFormat:@"%02X" , *utf8++ & 0x00FF];
     
@@ -358,20 +358,24 @@
 {
     NSData *dataToSend;
     UInt16 toDo;
+    NSString *message;
     
     if (self.lightIsOn) {
         dataToSend = [fm_light_off dataUsingEncoding: NSUTF8StringEncoding ];
         toDo = LIGHT_OFF;
+        message = @"Truning off";
     }
     else {
         dataToSend = [fm_light_on dataUsingEncoding: NSUTF8StringEncoding ];
         toDo = LIGHT_ON;
+        message = @"Truning on";
     }
     
     [self.serialPort sendData:dataToSend];
     // wait for the answer
     [self.commandQueue addObject: [NSNumber numberWithInt: toDo]];
-    
+    [self startCommandiTmer: message  timeout:5.0];
+   
 }
 
 - (IBAction) openFlipFlat:(id)sender
