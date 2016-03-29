@@ -314,8 +314,9 @@
         self.serialPort.parity = ORSSerialPortParityNone;
         [self.serialPort open];
         // Drop RTS
-        self.serialPort.RTS = NO;
         self.serialPort.DTR = YES;
+        self.serialPort.RTS = NO;
+        
         
         self.currentBuffer=@"";
         NSData *dataToSend = [fm_ping dataUsingEncoding: NSUTF8StringEncoding ];
@@ -347,8 +348,13 @@
     self.currentBrightness = brightness;
     
     NSMutableString *cmd = [[NSMutableString alloc] initWithString:fm_set_brightness];
-    [cmd appendFormat:@"%03d\r", brightness];
+    [cmd appendFormat:@"%03d\n", brightness];
     dataToSend = [cmd dataUsingEncoding: NSUTF8StringEncoding];
+#ifdef DEBUG
+    NSLog(@"cmd : \n%@", cmd);
+    NSLog(@"dataToSend : \n%@", [self dataToHex:dataToSend]);
+#endif
+
     [self.serialPort sendData:dataToSend];
     
     // wait for the answer
