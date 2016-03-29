@@ -54,6 +54,7 @@
 @property (unsafe_unretained) IBOutlet NSProgressIndicator *statusProgress;
 @property (nonatomic, readwrite) NSString *currentBuffer;
 @property (nonatomic, readwrite) bool firstConnect;
+@property (nonatomic, readwrite) bool shouldDisconnect;
 @property (nonatomic, readwrite) bool lightIsOn;
 @property (nonatomic, readwrite) bool flipFlatIsOpen;
 

@@ -92,6 +92,8 @@
     self.responseQueue = [[Queue alloc] init];
     [self.Brightness setContinuous:YES];
     [self.Brightness setIntegerValue:0];
+    self.firstConnect = true;
+    self.shouldDisconnect = false;
     self.currentBrightness = 0;
     self.lightIsOn = false;
     self.flipFlatIsOpen = false;
@@ -291,12 +293,17 @@
     if (self.fm_mode != NONE) {
         if (self.serialPort.isOpen) {
             [self stopTimeoutTimer];
-            // close the port
-            [self.serialPort close];
-            self.fm_mode = NONE;
-            [self updateConnectButtonLabel];
-            [self timerOk: @"Disconnected"];
-            [self.commandQueue emptyQueue ];
+            self.shouldDisconnect = true;
+            self.currentBuffer=@"";
+            NSData *dataToSend = [fm_light_off dataUsingEncoding: NSUTF8StringEncoding ];
+#ifdef DEBUG
+            NSLog(@"dataToSend : \n%@", dataToSend);
+#endif
+            [self.serialPort sendData:dataToSend];
+            // wait for the answer
+            [self.commandQueue addObject: [NSNumber numberWithInt: LIGHT_OFF]];
+            status = @"Disconnecting from device";
+            [self startCommandiTmer:status  timeout:5.0];
         }
     }
     else {
@@ -642,10 +649,21 @@
 
 - (void) processFlatmanResponseLightOff:(NSString *)response
 {
-    // *Dii000
-    self.TurnOnButton.title = @"Turn on";
-    self.lightIsOn = false;
-    self.Brightness.enabled = NO;
+    if(self.shouldDisconnect){
+        // close the port
+        [self.serialPort close];
+        self.fm_mode = NONE;
+        [self updateConnectButtonLabel];
+        [self timerOk: @"Disconnected"];
+        [self.commandQueue emptyQueue ];
+        [self setControlOff];
+    }
+    else {
+        // *Dii000
+        self.TurnOnButton.title = @"Turn on";
+        self.lightIsOn = false;
+        self.Brightness.enabled = NO;
+    }
 }
 
 - (void) processFlatmanResponseSetBrightness:(NSString *)response
