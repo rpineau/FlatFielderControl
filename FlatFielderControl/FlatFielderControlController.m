@@ -82,22 +82,6 @@
 - (void) awakeFromNib
 {
     // set some default
-    /*
-    self.maxPosition = 7000;
-    self.tcf3_enable = false;
-    self.focusStep = 1;
-    self.firstFPOSRO = true;
-    self.firstFREADX = true;
-    self.firstConnect = true;
-    self.shouldDisconnect = false;
-    [self.focuserStepper setMinValue: 1];
-    [self.focuserStepper setMaxValue: 1000];
-    self.focuserTempCompData = malloc(sizeof(TCF_tempCompData_type));
-    if (!self.focuserTempCompData) {
-        NSLog(@"Memory allocation error .. exiting");
-        [NSApp terminate:self];
-    }
-     */
     self.commandQueue = [[Queue alloc] init];
     self.responseQueue = [[Queue alloc] init];
     [self.Brightness setContinuous:YES];
