@@ -94,7 +94,7 @@
     [self setControlOff];
     [self.SerialDropdown removeItemWithTitle:@"No Value"];
     [self.SerialDropdown selectItemAtIndex:0];
-    
+    self.serialPort = [self.serialPortManager.availablePorts objectAtIndex:0];
 }
 
 - (void) windowWillClose:(NSNotification *)notification
@@ -316,7 +316,7 @@
         // Drop RTS
         self.serialPort.RTS = NO;
         self.serialPort.DTR = YES;
-
+        
         self.currentBuffer=@"";
         NSData *dataToSend = [fm_ping dataUsingEncoding: NSUTF8StringEncoding ];
 #ifdef DEBUG
