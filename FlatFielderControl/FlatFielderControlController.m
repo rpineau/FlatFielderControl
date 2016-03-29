@@ -69,6 +69,16 @@
     return [NSString stringWithFormat:@"%@", hex];
 }
 
+- (NSString *)dataToHex:(NSData *)data
+{
+    NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    const char *utf8 = [string UTF8String];
+    NSMutableString *hex = [NSMutableString string];
+    while ( *utf8 ) [hex appendFormat:@"%02X" , *utf8++ & 0x00FF];
+    
+    return [NSString stringWithFormat:@"%@", hex];
+}
+
 - (void) awakeFromNib
 {
     // set some default
@@ -297,7 +307,7 @@
             self.currentBuffer=@"";
             NSData *dataToSend = [fm_light_off dataUsingEncoding: NSUTF8StringEncoding ];
 #ifdef DEBUG
-            NSLog(@"dataToSend : \n%@", dataToSend);
+            NSLog(@"dataToSend : \n%@", [self dataToHex:dataToSend]);
 #endif
             [self.serialPort sendData:dataToSend];
             // wait for the answer
@@ -326,7 +336,7 @@
         self.currentBuffer=@"";
         NSData *dataToSend = [fm_ping dataUsingEncoding: NSUTF8StringEncoding ];
 #ifdef DEBUG
-        NSLog(@"dataToSend : \n%@", dataToSend);
+        NSLog(@"dataToSend : \n%@", [self dataToHex:dataToSend]);
 #endif
         [self.serialPort sendData:dataToSend];
         // wait for the answer

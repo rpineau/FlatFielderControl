@@ -60,6 +60,7 @@
 
 #pragma mark - Methods
 - (NSString *)stringToHex:(NSString *)string;
+- (NSString *)dataToHex:(NSData *)data;
 - (void) awakeFromNib;
 - (void) windowWillClose:(NSNotification *)notification;
 - (void) setControlOff;
