@@ -19,6 +19,7 @@
 		93EF793C1CA85FDC00E9037B /* ORSSerialPort.m in Sources */ = {isa = PBXBuildFile; fileRef = 93EF79351CA85FDC00E9037B /* ORSSerialPort.m */; };
 		93EF793D1CA85FDC00E9037B /* ORSSerialPortManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 93EF79371CA85FDC00E9037B /* ORSSerialPortManager.m */; };
 		93EF793E1CA85FDC00E9037B /* ORSSerialRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 93EF79391CA85FDC00E9037B /* ORSSerialRequest.m */; };
+		93F764811CAB871900B7DE34 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 93F7647F1CAB871900B7DE34 /* Credits.rtf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,6 +46,7 @@
 		93EF79371CA85FDC00E9037B /* ORSSerialPortManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ORSSerialPortManager.m; sourceTree = "<group>"; };
 		93EF79381CA85FDC00E9037B /* ORSSerialRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ORSSerialRequest.h; sourceTree = "<group>"; };
 		93EF79391CA85FDC00E9037B /* ORSSerialRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ORSSerialRequest.m; sourceTree = "<group>"; };
+		93F764801CAB871900B7DE34 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = Base; path = Base.lproj/Credits.rtf; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +109,7 @@
 		93A43D1F1C9DC94E006C8DB5 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				93F7647F1CAB871900B7DE34 /* Credits.rtf */,
 				93A43D201C9DC94E006C8DB5 /* main.m */,
 			);
 			name = "Supporting Files";
@@ -169,6 +172,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = 93A43D101C9DC94E006C8DB5;
 			productRefGroup = 93A43D1A1C9DC94E006C8DB5 /* Products */;
@@ -186,6 +190,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				930469E41C9DE5C900E39F0C /* MainMenu.xib in Resources */,
+				93F764811CAB871900B7DE34 /* Credits.rtf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -209,6 +214,17 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		93F7647F1CAB871900B7DE34 /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				93F764801CAB871900B7DE34 /* Base */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		93A43D281C9DC94E006C8DB5 /* Debug */ = {
