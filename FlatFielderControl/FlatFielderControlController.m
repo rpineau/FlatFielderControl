@@ -3,7 +3,7 @@
 //  FlatFielderControl
 //
 //  Created by roro on 19/3/16.
-//  Copyright © 2016 RTI-Zone. All rights reserved.
+//  Copyright  2016 RTI-Zone. All rights reserved.
 //
 
 #import "FlatFielderControlController.h"
@@ -18,7 +18,7 @@
     if (self)
     {
         [self GetSystemVersion ];
-        
+
         // code to run on app close.
         void (^terminationBlock)(void) = ^{
             if (self.commandQueue)
@@ -27,24 +27,24 @@
                 self.responseQueue = nil;
             self.fm_mode = NONE;
             [self.serialPort close];
-            
+
         };
-        
-        
+
+
         // register for notifications
         NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-        
+
         [nc addObserverForName:NSApplicationWillTerminateNotification
                         object:nil
                          queue:nil
                     usingBlock:^(NSNotification *notification){
                         terminationBlock();
                     }];
-        
+
         self.serialPortManager = [ORSSerialPortManager sharedSerialPortManager];
         self.availableBaudRates = [NSArray arrayWithObjects: [NSNumber numberWithInteger:300], [NSNumber numberWithInteger:1200], [NSNumber numberWithInteger:2400], [NSNumber numberWithInteger:4800], [NSNumber numberWithInteger:9600], [NSNumber numberWithInteger:14400], [NSNumber numberWithInteger:19200], [NSNumber numberWithInteger:28800], [NSNumber numberWithInteger:38400], [NSNumber numberWithInteger:57600], [NSNumber numberWithInteger:115200], [NSNumber numberWithInteger:230400],
                                    nil];
-        
+
         [nc addObserver:self selector:@selector(serialPortsWereConnected:) name:ORSSerialPortsWereConnectedNotification object:nil];
         [nc addObserver:self selector:@selector(serialPortsWereDisconnected:) name:ORSSerialPortsWereDisconnectedNotification object:nil];
 #if (MAC_OS_X_VERSION_MAX_ALLOWED > MAC_OS_X_VERSION_10_7)
@@ -65,7 +65,7 @@
     const char *utf8 = [string UTF8String];
     NSMutableString *hex = [NSMutableString string];
     while ( *utf8 ) [hex appendFormat:@"%02X" , *utf8++ & 0x00FF];
-    
+
     return [NSString stringWithFormat:@"%@", hex];
 }
 
@@ -75,7 +75,7 @@
     const char *utf8 = [string UTF8String];
     NSMutableString *hex = [NSMutableString string];
     while ( *utf8 ) [hex appendFormat:@"%02X" , *utf8++ & 0x00FF];
-    
+
     return [NSString stringWithFormat:@"%@", hex];
 }
 
@@ -94,7 +94,9 @@
     [self setControlOff];
     [self.SerialDropdown removeItemWithTitle:@"No Value"];
     [self.SerialDropdown selectItemAtIndex:0];
-    self.serialPort = [self.serialPortManager.availablePorts objectAtIndex:0];
+    if([self.serialPortManager.availablePorts count]) {
+        self.serialPort = [self.serialPortManager.availablePorts objectAtIndex:0];
+    }
 }
 
 - (void) windowWillClose:(NSNotification *)notification
@@ -113,9 +115,9 @@
 
 - (void) GetSystemVersion
 {
-    
+
     self.versionMajor = self.versionMinor = self.versionBugFix = 0;
-    
+
     NSString* versionString = [[NSDictionary dictionaryWithContentsOfFile:
                                 @"/System/Library/CoreServices/SystemVersion.plist"] objectForKey:@"ProductVersion"];
     NSArray* versions = [versionString componentsSeparatedByString:@"."];
@@ -147,7 +149,7 @@
     [self.statusProgress stopAnimation: self];
     // disable some control until we connect
     [self enableDisableControls: false];
-    
+
 }
 
 -(void) enableDisableControls: (BOOL)Enabled
@@ -184,18 +186,18 @@
 - (void) updateDeviceControls:(NSString *)response
 {
     // *Siiqrs
-    
+
     // check device type to enable/disable open/close controls
     NSRange devRange = NSMakeRange (2,2);
     self.deviceType = [[response substringWithRange:devRange] intValue];
     [self updateDeviceType: self.deviceType];
-    
+
     NSRange lightRange = NSMakeRange (5,1);
     self.lightState = [[response substringWithRange:lightRange] intValue];
 
     NSRange motorRange = NSMakeRange (4,1);
     self.motorState = [[response substringWithRange:motorRange] intValue];
-    
+
     NSRange coverRange = NSMakeRange (6,1);
     self.coverState = [[response substringWithRange:coverRange] intValue];
 
@@ -216,13 +218,13 @@
                 self.flipFlatIsOpen = false;
                 self.CloseButton.title = @"Close";
                 break;
-                
+
             case 1:
                 self.currentCoverState.stringValue = @"closed";
                 self.flipFlatIsOpen = false;
                 self.CloseButton.title = @"Open";
                 break;
-            
+
             case 2:
                 self.currentCoverState.stringValue = @"open";
                 self.flipFlatIsOpen = true;
@@ -232,7 +234,7 @@
             case 3:
                 self.currentCoverState.stringValue = @"timed out";
                 self.flipFlatIsOpen = false;
-                
+
                 break;
         }
     }
@@ -240,11 +242,11 @@
         self.HaltButton.enabled = NO;
         self.CloseButton.enabled = NO;
     }
-    
+
     // enable light controll, set state
     if (self.lightState) {
         self.TurnOnButton.enabled = true;
-        
+
         self.TurnOnButton.title = @"Turn off";
         self.lightIsOn = true;
         // get brightness.
@@ -259,7 +261,7 @@
         self.lightIsOn = false;
     }
 
-    
+
 }
 
 
@@ -279,7 +281,7 @@
         self.statusField.stringValue =@"Select a serial port before clicking \"Connect\"";
         return;
     }
-    
+
     NSString *status =@"";
     int i;
 
@@ -297,7 +299,7 @@
             // wait for the answer
             [self.commandQueue addObject: [NSNumber numberWithInt: LIGHT_OFF]];
             status = @"Disconnecting from device";
-            [self startCommandiTmer:status  timeout:5.0];
+            [self startCommandiTmer:status  timeout:2.0];
         }
     }
     else {
@@ -306,18 +308,18 @@
             if ( [self.commandQueue objectAtIndex:i] == [NSNumber numberWithInt: PING])
                 return;
         }
-        
+
         // connect to the focuser
         // set the port speed, stopbit, ...
         self.serialPort.baudRate = [NSNumber numberWithInteger:9600];
         self.serialPort.numberOfStopBits = (NSUInteger)1;
         self.serialPort.parity = ORSSerialPortParityNone;
         [self.serialPort open];
-        // Drop RTS
         self.serialPort.DTR = YES;
+        // Drop RTS
         self.serialPort.RTS = NO;
-        
-        
+
+
         self.currentBuffer=@"";
         NSData *dataToSend = [fm_ping dataUsingEncoding: NSUTF8StringEncoding ];
 #ifdef DEBUG
@@ -326,12 +328,12 @@
         [self.serialPort sendData:dataToSend];
         // wait for the answer
         [self.commandQueue addObject: [NSNumber numberWithInt: PING]];
-        
+
         status = @"Connecting to device";
         self.firstConnect = true;
-        [self startCommandiTmer:status  timeout:5.0];
+        [self startCommandiTmer:status  timeout:2.0];
     }
-    
+
 
 }
 
@@ -339,14 +341,20 @@
 {
     uint32_t brightness;
     NSData *dataToSend;
-    
+
+
     brightness = self.Brightness.intValue;
     if (brightness == 0) {
         return;
     }
-    
+
+    // Do not send new command until we get the response from the previous one.
+    if ([self.commandQueue queueLenght]) {
+        return;
+    }
+
     self.currentBrightness = brightness;
-    
+
     NSMutableString *cmd = [[NSMutableString alloc] initWithString:fm_set_brightness];
     [cmd appendFormat:@"%03d\n", brightness];
     dataToSend = [cmd dataUsingEncoding: NSUTF8StringEncoding];
@@ -356,11 +364,11 @@
 #endif
 
     [self.serialPort sendData:dataToSend];
-    
+
     // wait for the answer
     [self.commandQueue addObject: [NSNumber numberWithInt: SET_BRIGHTNESS]];
-    [self startCommandiTmer: @"Setting brightness"  timeout:5.0];
-    
+    [self startCommandiTmer: nil  timeout:2.0];
+
 }
 
 - (IBAction) turnLigthOn:(id)sender
@@ -368,7 +376,13 @@
     NSData *dataToSend;
     UInt16 toDo;
     NSString *message;
-    
+
+    // Do not send new command until we get the response from the previous one.
+    while ([self.commandQueue queueLenght]) {
+        // wait
+        [NSThread sleepForTimeInterval:0.1f];
+    }
+
     if (self.lightIsOn) {
         dataToSend = [fm_light_off dataUsingEncoding: NSUTF8StringEncoding ];
         toDo = LIGHT_OFF;
@@ -379,18 +393,23 @@
         toDo = LIGHT_ON;
         message = @"Truning on";
     }
-    
+
     [self.serialPort sendData:dataToSend];
     // wait for the answer
     [self.commandQueue addObject: [NSNumber numberWithInt: toDo]];
-    [self startCommandiTmer: message  timeout:5.0];
-   
+    [self startCommandiTmer: message  timeout:2.0];
+
 }
 
 - (IBAction) openFlipFlat:(id)sender
 {
     NSData *dataToSend;
     UInt16 toDo;
+
+    // Do not send new command until we get the response from the previous one.
+    while ([self.commandQueue queueLenght]) {
+        // wait
+    }
 
     if (self.flipFlatIsOpen) {
         dataToSend= [fm_close dataUsingEncoding: NSUTF8StringEncoding ];
@@ -400,20 +419,25 @@
         dataToSend= [fm_open dataUsingEncoding: NSUTF8StringEncoding ];
         toDo = OPEN;
     }
-    
+
     [self.serialPort sendData:dataToSend];
     // wait for the answer
     [self.commandQueue addObject: [NSNumber numberWithInt: toDo]];
-    
+
 }
 
 - (IBAction) haltFlipFlat:(id)sender
 {
+    // Do not send new command until we get the response from the previous one.
+    while ([self.commandQueue queueLenght]) {
+        // wait
+    }
+
     NSData *dataToSend = [fm_close dataUsingEncoding: NSUTF8StringEncoding ];
     [self.serialPort sendData:dataToSend];
     // wait for the answer
     [self.commandQueue addObject: [NSNumber numberWithInt: CLOSE]];
-    
+
 }
 
 
@@ -421,15 +445,15 @@
 
 -(void) startTimeoutTimer: (float) timeout
 {
-    
+
     [self stopTimeoutTimer];
-    
+
     self.timeoutTimer = [NSTimer scheduledTimerWithTimeInterval:timeout
                                                          target:self
                                                        selector:@selector(timeOut:)
                                                        userInfo:nil
                                                         repeats:NO];
-    
+
 #if (MAC_OS_X_VERSION_MAX_ALLOWED > 1080)
     if (self.versionMajor == 10 && self.versionMinor >8)
         [self.timeoutTimer setTolerance:0.2];
@@ -442,7 +466,7 @@
     if (self.timeoutTimer) {
         [self.timeoutTimer invalidate];
         self.timeoutTimer = nil;
-        
+
         if([self.commandQueue queueLenght])
             [self.commandQueue takeObject];
     }
@@ -454,7 +478,7 @@
     self.statusProgress.hidden = YES;
     self.statusField.textColor = [NSColor blackColor];
     self.statusField.stringValue = message;
-    
+
 }
 
 
@@ -462,10 +486,14 @@
 {
     [self startTimeoutTimer: timeoutValue];
     self.statusField.textColor = [NSColor blackColor];
-    self.statusField.stringValue = message;
-    self.statusProgress.hidden = NO;
-    [self.statusProgress startAnimation: self];
-    
+    if (message) {
+        self.statusField.stringValue = message;
+        self.statusProgress.hidden = NO;
+        [self.statusProgress startAnimation: self];
+    }
+    else {
+        self.statusField.stringValue = @"";
+    }
 }
 
 -(void) timeOut: (NSTimer *)timer
@@ -478,7 +506,7 @@
         command = [[self.commandQueue takeObject ] intValue];
     else
         command = NONE;
-    
+
     switch (command) {
         case PING :
             [self.serialPort close];
@@ -501,19 +529,19 @@
         case CLOSE :
             errorMessage = @"Error closing Flip-Flat";
             break;
-            
+
         case LIGHT_ON :
             errorMessage = @"Error swicthing light on";
             break;
-            
+
         case LIGHT_OFF :
             errorMessage = @"Error swicthing light off";
             break;
-            
+
         case SET_BRIGHTNESS :
             errorMessage = @"Error setting brightness";
             break;
-            
+
         case GET_BRIGHTNESS :
             errorMessage = @"Error getting brightness";
             break;
@@ -521,13 +549,13 @@
         case GET_VERSION :
             errorMessage = @"Error getting firmware version";
             break;
-            
+
     }
     self.statusField.stringValue = errorMessage;
     self.statusField.textColor = [NSColor redColor];
     // do we want to cancel all the other commands ?
     [self.commandQueue emptyQueue ];
-    
+
 #ifdef DEBUG
     NSLog(@"current data buffer content : \n%@", self.currentBuffer);
 #endif
@@ -549,11 +577,11 @@
         resp_cmd = [response substringWithRange:NSMakeRange(0,2)];
     else
         return;
-    
+
     if ( [resp_cmd isEqualToString:fm_ping_answer]) {
         [self stopTimeoutTimer];
         if (self.firstConnect) {
-            [self timerOk: @"Connected"];
+            [self timerOk: @"Connected"];
             self.fm_mode = CONNECTED;
             [self updateConnectButtonLabel];
             [self enableDisableControls:true];
@@ -563,45 +591,45 @@
     }
     else if ( [resp_cmd isEqualToString:fm_open_answer]) {
         [self stopTimeoutTimer];
-        [self timerOk: @"Connected"];
+        [self timerOk: @"Connected"];
         [self processFlatmanResponseOpen:response];
     }
     else if ( [resp_cmd isEqualToString:fm_close_answer]) {
         [self stopTimeoutTimer];
-        [self timerOk: @"Connected"];
+        [self timerOk: @"Connected"];
         [self processFlatmanResponseClose:response];
     }
     else if ( [resp_cmd isEqualToString:fm_light_on_answer]) {
         [self stopTimeoutTimer];
-        [self timerOk: @"Connected"];
+        [self timerOk: @"Connected"];
         [self processFlatmanResponseLightOn:response];
     }
     else if ( [resp_cmd isEqualToString:fm_light_off_answer]) {
         [self stopTimeoutTimer];
-        [self timerOk: @"Connected"];
+        [self timerOk: @"Connected"];
         [self processFlatmanResponseLightOff:response];
     }
     else if ( [resp_cmd isEqualToString:fm_set_brightness_answer]) {
         [self stopTimeoutTimer];
-        [self timerOk: @"Connected"];
+        [self timerOk: @"Connected"];
         [self processFlatmanResponseSetBrightness:response];
     }
     else if ( [resp_cmd isEqualToString:fm_get_brightness_answer]) {
         [self stopTimeoutTimer];
-        [self timerOk: @"Connected"];
+        [self timerOk: @"Connected"];
         [self processFlatmanResponseGetBrightness:response];
     }
     else if ( [resp_cmd isEqualToString:fm_get_state_answer]) {
         [self stopTimeoutTimer];
-        [self timerOk: @"Connected"];
+        [self timerOk: @"Connected"];
         [self processFlatmanResponseGetState:response];
     }
     else if ( [resp_cmd isEqualToString:fm_get_version_answer]) {
         [self stopTimeoutTimer];
-        [self timerOk: @"Connected"];
+        [self timerOk: @"Connected"];
         [self processFlatmanResponseGetVersion:response];
     }
- 
+
 }
 
 
@@ -615,7 +643,7 @@
     [self.serialPort sendData:dataToSend];
     // wait for the answer
     [self.commandQueue addObject: [NSNumber numberWithInt: GET_STATE]];
-    [self startCommandiTmer: @"Getting state"  timeout:5.0];
+    [self startCommandiTmer: @"Getting state"  timeout:2.0];
 
 }
 
@@ -623,7 +651,7 @@
 {
     // *Oii000
     // does it replies when it's done opening ?
-    
+
 }
 
 - (void) processFlatmanResponseClose:(NSString *)response
@@ -643,7 +671,7 @@
     [self.serialPort sendData:dataToSend];
     // wait for the answer
     [self.commandQueue addObject: [NSNumber numberWithInt: GET_BRIGHTNESS]];
-    [self startCommandiTmer: @"Getting state"  timeout:5.0];
+    [self startCommandiTmer: @"Getting state"  timeout:2.0];
 
 }
 
@@ -654,7 +682,7 @@
         [self.serialPort close];
         self.fm_mode = NONE;
         [self updateConnectButtonLabel];
-        [self timerOk: @"Disconnected"];
+        [self timerOk: @"Disconnected"];
         [self.commandQueue emptyQueue ];
         [self setControlOff];
     }
@@ -689,7 +717,7 @@
         [self.serialPort sendData:dataToSend];
         // wait for the answer
         [self.commandQueue addObject: [NSNumber numberWithInt: GET_VERSION]];
-        [self startCommandiTmer: @"Getting firmware version"  timeout:5.0];
+        [self startCommandiTmer: @"Getting firmware version"  timeout:2.0];
     }
 
 }
@@ -706,7 +734,7 @@
         [self.serialPort sendData:dataToSend];
         // wait for the answer
         [self.commandQueue addObject: [NSNumber numberWithInt: GET_BRIGHTNESS]];
-        [self startCommandiTmer: @"Getting state"  timeout:5.0];
+        [self startCommandiTmer: @"Getting state"  timeout:2.0];
         self.firstConnect = false;
     }
 }
@@ -731,10 +759,10 @@
 #ifdef DEBUG
     NSLog(@"received string : %@\n", [self stringToHex:string]);
 #endif
-    
+
     if(!self.responseQueue && !self.commandQueue)
         return;
-    
+
     self.currentBuffer = [self.currentBuffer stringByAppendingString:string];
 #ifdef DEBUG
     NSLog(@"currentBuffer : %@\n", self.currentBuffer);
@@ -747,7 +775,7 @@
 #ifdef DEBUG
     NSLog(@"currentBuffer (hex) : %@\n", [self stringToHex:self.currentBuffer]);
 #endif
-    
+
     for ( i=0; i<[dataChunk count]; i++) {
         NSString *s = [dataChunk objectAtIndex:i];
 #ifdef DEBUG
@@ -819,14 +847,14 @@
     NSLog(@"Ports were disconnected: %@", disconnectedPorts);
 #endif
     [self postUserNotificationForDisconnectedPorts:disconnectedPorts];
-    
+
 }
 
 - (void) postUserNotificationForConnectedPorts:(NSArray *)connectedPorts
 {
 #if (MAC_OS_X_VERSION_MAX_ALLOWED > MAC_OS_X_VERSION_10_7)
     if (!NSClassFromString(@"NSUserNotificationCenter")) return;
-    
+
     NSUserNotificationCenter *unc = [NSUserNotificationCenter defaultUserNotificationCenter];
     for (ORSSerialPort *port in connectedPorts)
     {
@@ -844,7 +872,7 @@
 {
 #if (MAC_OS_X_VERSION_MAX_ALLOWED > MAC_OS_X_VERSION_10_7)
     if (!NSClassFromString(@"NSUserNotificationCenter")) return;
-    
+
     NSUserNotificationCenter *unc = [NSUserNotificationCenter defaultUserNotificationCenter];
     for (ORSSerialPort *port in disconnectedPorts)
     {
@@ -877,9 +905,9 @@
     {
         [_serialPort close];
         _serialPort.delegate = nil;
-        
+
         _serialPort = port;
-        
+
         _serialPort.delegate = self;
     }
 }

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9532" systemVersion="14F1713" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10116"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9532"/>
         <capability name="box content view" minToolsVersion="7.0"/>
     </dependencies>
     <objects>
@@ -665,12 +665,12 @@
         </menu>
         <window title="Flat Fielder Control" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" animationBehavior="default" id="F0z-JX-Cv5">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
-            <rect key="contentRect" x="128" y="128" width="393" height="353"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1057"/>
+            <rect key="contentRect" x="128" y="128" width="412" height="353"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1280" height="777"/>
             <value key="minSize" type="size" width="393" height="353"/>
             <value key="maxSize" type="size" width="393" height="353"/>
             <view key="contentView" id="se5-gp-TjO">
-                <rect key="frame" x="0.0" y="0.0" width="393" height="353"/>
+                <rect key="frame" x="0.0" y="0.0" width="412" height="353"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qfG-RE-4Cu">
@@ -682,16 +682,16 @@
                         </textFieldCell>
                     </textField>
                     <box autoresizesSubviews="NO" fixedFrame="YES" title="Status" borderType="line" translatesAutoresizingMaskIntoConstraints="NO" id="13w-mT-R8w">
-                        <rect key="frame" x="17" y="16" width="359" height="49"/>
+                        <rect key="frame" x="17" y="16" width="273" height="49"/>
                         <view key="contentView" id="YsW-hA-bcC">
-                            <rect key="frame" x="1" y="1" width="357" height="33"/>
+                            <rect key="frame" x="1" y="1" width="271" height="33"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" maxValue="100" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="Ibi-3c-X6W">
                                     <rect key="frame" x="12" y="10" width="16" height="16"/>
                                 </progressIndicator>
                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="93Z-WP-qwA">
-                                    <rect key="frame" x="34" y="10" width="305" height="17"/>
+                                    <rect key="frame" x="34" y="10" width="197" height="17"/>
                                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Offline" id="8OI-i5-wLk">
                                         <font key="font" metaFont="system"/>
                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -725,53 +725,10 @@
                             <binding destination="k4w-Jx-NUI" name="contentValues" keyPath="self.serialPortManager.availablePorts" previousBinding="2c9-g8-J9L" id="wDr-VO-SJM"/>
                         </connections>
                     </popUpButton>
-                    <box fixedFrame="YES" title="Light Source" borderType="line" translatesAutoresizingMaskIntoConstraints="NO" id="SHZ-2f-zNM">
-                        <rect key="frame" x="273" y="63" width="103" height="280"/>
-                        <view key="contentView" id="ctA-ES-tMh">
-                            <rect key="frame" x="1" y="1" width="101" height="264"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                            <subviews>
-                                <slider horizontalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="X2Q-Aj-f7R">
-                                    <rect key="frame" x="42" y="30" width="26" height="216"/>
-                                    <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="255" doubleValue="128" tickMarkPosition="right" numberOfTickMarks="5" sliderType="linear" id="Qt5-rt-mbj"/>
-                                    <connections>
-                                        <action selector="updateBrightness:" target="k4w-Jx-NUI" id="HvL-am-vm2"/>
-                                    </connections>
-                                </slider>
-                                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HdA-Gp-mX6">
-                                    <rect key="frame" x="6" y="-2" width="89" height="32"/>
-                                    <buttonCell key="cell" type="push" title="Turn On" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="g8M-ls-AWT">
-                                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                        <font key="font" metaFont="system"/>
-                                    </buttonCell>
-                                    <connections>
-                                        <action selector="turnLigthOn:" target="k4w-Jx-NUI" id="b1f-co-I8h"/>
-                                    </connections>
-                                </button>
-                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sxN-RR-fLG">
-                                    <rect key="frame" x="33" y="247" width="34" height="17"/>
-                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="255" id="mBN-kV-rYh">
-                                        <font key="font" metaFont="system"/>
-                                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                    </textFieldCell>
-                                    <connections>
-                                        <binding destination="k4w-Jx-NUI" name="displayPatternValue1" keyPath="self.currentBrightness" id="hib-RR-o0I">
-                                            <dictionary key="options">
-                                                <string key="NSDisplayPattern">%{value1}@</string>
-                                            </dictionary>
-                                        </binding>
-                                    </connections>
-                                </textField>
-                            </subviews>
-                        </view>
-                        <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
-                        <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                    </box>
                     <box fixedFrame="YES" title="Open/Close" borderType="line" translatesAutoresizingMaskIntoConstraints="NO" id="eO3-58-ylW">
-                        <rect key="frame" x="17" y="69" width="241" height="156"/>
+                        <rect key="frame" x="17" y="69" width="273" height="156"/>
                         <view key="contentView" id="Xxb-kQ-V1f">
-                            <rect key="frame" x="1" y="1" width="239" height="140"/>
+                            <rect key="frame" x="1" y="1" width="271" height="140"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9g1-sm-7c5">
@@ -867,9 +824,52 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
+                    <box fixedFrame="YES" title="Light Source" borderType="line" translatesAutoresizingMaskIntoConstraints="NO" id="SHZ-2f-zNM">
+                        <rect key="frame" x="292" y="16" width="103" height="325"/>
+                        <view key="contentView" id="ctA-ES-tMh">
+                            <rect key="frame" x="1" y="1" width="101" height="309"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <subviews>
+                                <slider horizontalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="X2Q-Aj-f7R">
+                                    <rect key="frame" x="42" y="41" width="26" height="250"/>
+                                    <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="255" doubleValue="128" tickMarkPosition="right" numberOfTickMarks="5" sliderType="linear" id="Qt5-rt-mbj"/>
+                                    <connections>
+                                        <action selector="updateBrightness:" target="k4w-Jx-NUI" id="HvL-am-vm2"/>
+                                    </connections>
+                                </slider>
+                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sxN-RR-fLG">
+                                    <rect key="frame" x="33" y="292" width="34" height="17"/>
+                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="255" id="mBN-kV-rYh">
+                                        <font key="font" metaFont="system"/>
+                                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                    <connections>
+                                        <binding destination="k4w-Jx-NUI" name="displayPatternValue1" keyPath="self.currentBrightness" id="hib-RR-o0I">
+                                            <dictionary key="options">
+                                                <string key="NSDisplayPattern">%{value1}@</string>
+                                            </dictionary>
+                                        </binding>
+                                    </connections>
+                                </textField>
+                                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HdA-Gp-mX6">
+                                    <rect key="frame" x="6" y="2" width="89" height="32"/>
+                                    <buttonCell key="cell" type="push" title="Turn On" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="g8M-ls-AWT">
+                                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="turnLigthOn:" target="k4w-Jx-NUI" id="b1f-co-I8h"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                        </view>
+                        <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
+                        <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    </box>
                 </subviews>
             </view>
-            <point key="canvasLocation" x="608.5" y="635.5"/>
+            <point key="canvasLocation" x="618" y="635.5"/>
         </window>
         <customObject id="E20-n2-7MJ" customClass="AppDelegate">
             <connections>

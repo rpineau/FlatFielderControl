@@ -3,7 +3,7 @@
 //  FlatFielderControl
 //
 //  Created by roro on 19/3/16.
-//  Copyright © 2016 RTI-Zone. All rights reserved.
+//  Copyright  2016 RTI-Zone. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
