@@ -11,6 +11,7 @@
 		930469E01C9DE4D000E39F0C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 930469DF1C9DE4D000E39F0C /* Cocoa.framework */; };
 		930469E41C9DE5C900E39F0C /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 930469E31C9DE5C900E39F0C /* MainMenu.xib */; };
 		930469E71C9DED4800E39F0C /* FlatFielderControlController.m in Sources */ = {isa = PBXBuildFile; fileRef = 930469E61C9DED4800E39F0C /* FlatFielderControlController.m */; };
+		931E22561CAC8BC3006DD638 /* FlatFielderControl.icns in Resources */ = {isa = PBXBuildFile; fileRef = 931E22551CAC8BC3006DD638 /* FlatFielderControl.icns */; };
 		93A43D1E1C9DC94E006C8DB5 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 93A43D1D1C9DC94E006C8DB5 /* AppDelegate.m */; };
 		93A43D211C9DC94E006C8DB5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 93A43D201C9DC94E006C8DB5 /* main.m */; };
 		93A43D351C9DCB5B006C8DB5 /* Queue.m in Sources */ = {isa = PBXBuildFile; fileRef = 93A43D321C9DCB5B006C8DB5 /* Queue.m */; };
@@ -29,6 +30,7 @@
 		930469E51C9DED4800E39F0C /* FlatFielderControlController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlatFielderControlController.h; sourceTree = "<group>"; };
 		930469E61C9DED4800E39F0C /* FlatFielderControlController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FlatFielderControlController.m; sourceTree = "<group>"; };
 		930469E81C9DED8D00E39F0C /* Flatman_Command.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Flatman_Command.h; sourceTree = "<group>"; };
+		931E22551CAC8BC3006DD638 /* FlatFielderControl.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = FlatFielderControl.icns; sourceTree = "<group>"; };
 		93A43D191C9DC94E006C8DB5 /* FlatFielderControl.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlatFielderControl.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		93A43D1C1C9DC94E006C8DB5 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		93A43D1D1C9DC94E006C8DB5 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -109,6 +111,7 @@
 		93A43D1F1C9DC94E006C8DB5 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				931E22551CAC8BC3006DD638 /* FlatFielderControl.icns */,
 				93F7647F1CAB871900B7DE34 /* Credits.rtf */,
 				93A43D201C9DC94E006C8DB5 /* main.m */,
 			);
@@ -190,6 +193,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				930469E41C9DE5C900E39F0C /* MainMenu.xib in Resources */,
+				931E22561CAC8BC3006DD638 /* FlatFielderControl.icns in Resources */,
 				93F764811CAB871900B7DE34 /* Credits.rtf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

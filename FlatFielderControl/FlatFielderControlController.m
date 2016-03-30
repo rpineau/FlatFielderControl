@@ -276,14 +276,15 @@
 
 - (IBAction) connectToFlatman:(id)sender
 {
+    NSString *status =@"";
+    int i;
+    BOOL rts;
+
     if (!self.serialPort) {
         self.statusField.textColor = [NSColor redColor];
         self.statusField.stringValue =@"Select a serial port before clicking \"Connect\"";
         return;
     }
-
-    NSString *status =@"";
-    int i;
 
     // disconnect from the focuser
     if (self.fm_mode != NONE) {
@@ -317,14 +318,22 @@
         [self.serialPort open];
         self.serialPort.DTR = YES;
         // Drop RTS
+        self.serialPort.RTS = YES;
+        [NSThread sleepForTimeInterval:0.1f];
         self.serialPort.RTS = NO;
-
+        [NSThread sleepForTimeInterval:0.1f];
+        rts = self.serialPort.RTS;
 
         self.currentBuffer=@"";
         NSData *dataToSend = [fm_ping dataUsingEncoding: NSUTF8StringEncoding ];
 #ifdef DEBUG
         NSLog(@"dataToSend : \n%@", [self dataToHex:dataToSend]);
 #endif
+        // send 3 pings
+        [self.serialPort sendData:dataToSend];
+        [NSThread sleepForTimeInterval:0.1f];
+        [self.serialPort sendData:dataToSend];
+        [NSThread sleepForTimeInterval:0.1f];
         [self.serialPort sendData:dataToSend];
         // wait for the answer
         [self.commandQueue addObject: [NSNumber numberWithInt: PING]];
