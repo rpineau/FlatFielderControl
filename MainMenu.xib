@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9532" systemVersion="14F1713" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9532"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10116"/>
         <capability name="box content view" minToolsVersion="7.0"/>
     </dependencies>
     <objects>
@@ -665,12 +665,12 @@
         </menu>
         <window title="Flat Fielder Control" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" animationBehavior="default" id="F0z-JX-Cv5">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
-            <rect key="contentRect" x="128" y="128" width="412" height="353"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1280" height="777"/>
-            <value key="minSize" type="size" width="393" height="353"/>
-            <value key="maxSize" type="size" width="393" height="353"/>
+            <rect key="contentRect" x="128" y="128" width="427" height="353"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1057"/>
+            <value key="minSize" type="size" width="427" height="353"/>
+            <value key="maxSize" type="size" width="427" height="353"/>
             <view key="contentView" id="se5-gp-TjO">
-                <rect key="frame" x="0.0" y="0.0" width="412" height="353"/>
+                <rect key="frame" x="0.0" y="0.0" width="427" height="353"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qfG-RE-4Cu">
@@ -825,7 +825,7 @@
                         </textFieldCell>
                     </textField>
                     <box fixedFrame="YES" title="Light Source" borderType="line" translatesAutoresizingMaskIntoConstraints="NO" id="SHZ-2f-zNM">
-                        <rect key="frame" x="292" y="16" width="103" height="325"/>
+                        <rect key="frame" x="307" y="16" width="103" height="325"/>
                         <view key="contentView" id="ctA-ES-tMh">
                             <rect key="frame" x="1" y="1" width="101" height="309"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -869,7 +869,7 @@
                     </box>
                 </subviews>
             </view>
-            <point key="canvasLocation" x="618" y="635.5"/>
+            <point key="canvasLocation" x="625.5" y="635.5"/>
         </window>
         <customObject id="E20-n2-7MJ" customClass="AppDelegate">
             <connections>
