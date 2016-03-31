@@ -57,6 +57,7 @@
 @property (nonatomic, readwrite) bool shouldDisconnect;
 @property (nonatomic, readwrite) bool lightIsOn;
 @property (nonatomic, readwrite) bool flipFlatIsOpen;
+@property (strong) id activity;
 
 #pragma mark - Methods
 - (NSString *)stringToHex:(NSString *)string;

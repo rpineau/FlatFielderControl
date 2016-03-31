@@ -81,6 +81,10 @@
 
 - (void) awakeFromNib
 {
+    if ([[NSProcessInfo processInfo] respondsToSelector:@selector(beginActivityWithOptions:reason:)]) {
+        self.activity = [[NSProcessInfo processInfo] beginActivityWithOptions:0x00FFFFFF reason:@"receiving OSC messages"];
+    }
+
     // set some default
     self.commandQueue = [[Queue alloc] init];
     self.responseQueue = [[Queue alloc] init];
@@ -278,7 +282,6 @@
 {
     NSString *status =@"";
     int i;
-    BOOL rts;
 
     if (!self.serialPort) {
         self.statusField.textColor = [NSColor redColor];
@@ -318,23 +321,16 @@
         [self.serialPort open];
         self.serialPort.DTR = YES;
         // Drop RTS
-        self.serialPort.RTS = YES;
-        [NSThread sleepForTimeInterval:0.1f];
         self.serialPort.RTS = NO;
-        [NSThread sleepForTimeInterval:0.1f];
-        rts = self.serialPort.RTS;
+        [NSThread sleepForTimeInterval:2.0f];
 
         self.currentBuffer=@"";
         NSData *dataToSend = [fm_ping dataUsingEncoding: NSUTF8StringEncoding ];
 #ifdef DEBUG
         NSLog(@"dataToSend : \n%@", [self dataToHex:dataToSend]);
 #endif
-        // send 3 pings
         [self.serialPort sendData:dataToSend];
         [NSThread sleepForTimeInterval:0.1f];
-        [self.serialPort sendData:dataToSend];
-        [NSThread sleepForTimeInterval:0.1f];
-        [self.serialPort sendData:dataToSend];
         // wait for the answer
         [self.commandQueue addObject: [NSNumber numberWithInt: PING]];
 
@@ -509,6 +505,7 @@
 {
     NSString *errorMessage = @"";
     UInt16 command;
+
     [self.statusProgress stopAnimation: self];
     self.statusProgress.hidden = YES;
     if([self.commandQueue queueLenght])
@@ -518,8 +515,8 @@
 
     switch (command) {
         case PING :
-            [self.serialPort close];
             if (self.firstConnect) {
+                [self.serialPort close];
                 errorMessage = @"Error connecting to the device";
             }
             else {
@@ -545,6 +542,14 @@
 
         case LIGHT_OFF :
             errorMessage = @"Error swicthing light off";
+            if (self.shouldDisconnect) {
+                // close the port
+                [self.serialPort close];
+                self.fm_mode = NONE;
+                [self updateConnectButtonLabel];
+                [self.commandQueue emptyQueue ];
+                [self setControlOff];
+            }
             break;
 
         case SET_BRIGHTNESS :
@@ -558,6 +563,11 @@
         case GET_VERSION :
             errorMessage = @"Error getting firmware version";
             break;
+
+        default :
+            errorMessage = @"Error ";
+            break;
+
 
     }
     self.statusField.stringValue = errorMessage;

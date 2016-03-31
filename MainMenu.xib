@@ -800,57 +800,6 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <box fixedFrame="YES" title="Light Source" borderType="line" translatesAutoresizingMaskIntoConstraints="NO" id="SHZ-2f-zNM">
-                        <rect key="frame" x="19" y="77" width="539" height="88"/>
-                        <view key="contentView" id="ctA-ES-tMh">
-                            <rect key="frame" x="1" y="1" width="537" height="72"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                            <subviews>
-                                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HdA-Gp-mX6">
-                                    <rect key="frame" x="6" y="-235" width="89" height="32"/>
-                                    <buttonCell key="cell" type="push" title="Turn On" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="g8M-ls-AWT">
-                                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                        <font key="font" metaFont="system"/>
-                                    </buttonCell>
-                                    <connections>
-                                        <action selector="turnLigthOn:" target="k4w-Jx-NUI" id="b1f-co-I8h"/>
-                                    </connections>
-                                </button>
-                                <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3kW-FI-EPh">
-                                    <rect key="frame" x="10" y="19" width="509" height="27"/>
-                                    <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="255" doubleValue="128" tickMarkPosition="below" numberOfTickMarks="5" sliderType="linear" id="IRI-Ej-JJV"/>
-                                    <connections>
-                                        <action selector="updateBrightness:" target="k4w-Jx-NUI" id="9KG-w2-oDD"/>
-                                    </connections>
-                                </slider>
-                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Tus-09-pWt">
-                                    <rect key="frame" x="10" y="52" width="131" height="17"/>
-                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Current brightness : " id="xkA-IY-iLY">
-                                        <font key="font" metaFont="system"/>
-                                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                    </textFieldCell>
-                                </textField>
-                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sxN-RR-fLG">
-                                    <rect key="frame" x="137" y="52" width="34" height="17"/>
-                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="255" id="mBN-kV-rYh">
-                                        <font key="font" metaFont="system"/>
-                                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                    </textFieldCell>
-                                    <connections>
-                                        <binding destination="k4w-Jx-NUI" name="displayPatternValue1" keyPath="self.currentBrightness" id="hib-RR-o0I">
-                                            <dictionary key="options">
-                                                <string key="NSDisplayPattern">%{value1}@</string>
-                                            </dictionary>
-                                        </binding>
-                                    </connections>
-                                </textField>
-                            </subviews>
-                        </view>
-                        <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
-                        <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                    </box>
                     <box autoresizesSubviews="NO" fixedFrame="YES" title="Status" borderType="line" translatesAutoresizingMaskIntoConstraints="NO" id="13w-mT-R8w">
                         <rect key="frame" x="17" y="24" width="541" height="49"/>
                         <view key="contentView" id="YsW-hA-bcC">
@@ -873,9 +822,60 @@
                         <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
                         <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     </box>
+                    <box fixedFrame="YES" title="Light Source" borderType="line" translatesAutoresizingMaskIntoConstraints="NO" id="SHZ-2f-zNM">
+                        <rect key="frame" x="17" y="77" width="539" height="98"/>
+                        <view key="contentView" id="ctA-ES-tMh">
+                            <rect key="frame" x="1" y="1" width="537" height="82"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <subviews>
+                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Tus-09-pWt">
+                                    <rect key="frame" x="129" y="52" width="131" height="17"/>
+                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Current brightness : " id="xkA-IY-iLY">
+                                        <font key="font" metaFont="system"/>
+                                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                </textField>
+                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sxN-RR-fLG">
+                                    <rect key="frame" x="264" y="52" width="34" height="17"/>
+                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="255" id="mBN-kV-rYh">
+                                        <font key="font" metaFont="system"/>
+                                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                    <connections>
+                                        <binding destination="k4w-Jx-NUI" name="displayPatternValue1" keyPath="self.currentBrightness" id="hib-RR-o0I">
+                                            <dictionary key="options">
+                                                <string key="NSDisplayPattern">%{value1}@</string>
+                                            </dictionary>
+                                        </binding>
+                                    </connections>
+                                </textField>
+                                <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3kW-FI-EPh">
+                                    <rect key="frame" x="9" y="19" width="509" height="27"/>
+                                    <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="255" doubleValue="128" tickMarkPosition="below" numberOfTickMarks="5" sliderType="linear" id="IRI-Ej-JJV"/>
+                                    <connections>
+                                        <action selector="updateBrightness:" target="k4w-Jx-NUI" id="9KG-w2-oDD"/>
+                                    </connections>
+                                </slider>
+                                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1e2-PU-qlW">
+                                    <rect key="frame" x="5" y="43" width="85" height="32"/>
+                                    <buttonCell key="cell" type="push" title="TurnOn" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="gqW-Ov-Ckf">
+                                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="turnLigthOn:" target="k4w-Jx-NUI" id="hJC-1t-4yy"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                        </view>
+                        <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
+                        <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    </box>
                 </subviews>
             </view>
-            <point key="canvasLocation" x="668.5" y="646.5"/>
+            <point key="canvasLocation" x="348.5" y="346.5"/>
         </window>
         <customObject id="E20-n2-7MJ" customClass="AppDelegate">
             <connections>
@@ -891,7 +891,7 @@
                 <outlet property="FirmwareVersion" destination="HHv-wC-hle" id="31i-kW-hJV"/>
                 <outlet property="HaltButton" destination="WCo-vz-s3A" id="YNp-W2-68S"/>
                 <outlet property="SerialDropdown" destination="389-be-jK6" id="hcU-yI-ynm"/>
-                <outlet property="TurnOnButton" destination="HdA-Gp-mX6" id="Uih-6P-tRA"/>
+                <outlet property="TurnOnButton" destination="1e2-PU-qlW" id="y8l-Sd-jKz"/>
                 <outlet property="currentCoverState" destination="YzF-bw-0gE" id="iPf-Kk-cvi"/>
                 <outlet property="currentMotorState" destination="GTT-eX-4oJ" id="NUZ-WL-7Og"/>
                 <outlet property="flatFielderControllWindow" destination="F0z-JX-Cv5" id="QES-wy-XBX"/>
