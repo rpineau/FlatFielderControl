@@ -322,21 +322,9 @@
         self.serialPort.DTR = YES;
         // Drop RTS
         self.serialPort.RTS = NO;
-        [NSThread sleepForTimeInterval:2.0f];
-
-        self.currentBuffer=@"";
-        NSData *dataToSend = [fm_ping dataUsingEncoding: NSUTF8StringEncoding ];
-#ifdef DEBUG
-        NSLog(@"dataToSend : \n%@", [self dataToHex:dataToSend]);
-#endif
-        [self.serialPort sendData:dataToSend];
-        [NSThread sleepForTimeInterval:0.1f];
-        // wait for the answer
-        [self.commandQueue addObject: [NSNumber numberWithInt: PING]];
-
         status = @"Connecting to device";
-        self.firstConnect = true;
-        [self startCommandiTmer:status  timeout:2.0];
+        // 2 seconds delay after droping RTS before you can talk to the device.
+        [self startConnectionTimer:status waitTime:2.0f];
     }
 
 
@@ -448,7 +436,7 @@
 
 #pragma mark - Timer control
 
--(void) startTimeoutTimer: (float) timeout
+- (void) startTimeoutTimer: (float) timeout
 {
 
     [self stopTimeoutTimer];
@@ -465,7 +453,32 @@
 #endif
 }
 
--(void) stopTimeoutTimer
+- (void) startConnectionTimer: (NSString*)message waitTime:(float) waitTimeValue
+{
+    self.statusField.textColor = [NSColor blackColor];
+    if (message) {
+        self.statusField.stringValue = message;
+        self.statusProgress.hidden = NO;
+        [self.statusProgress startAnimation: self];
+    }
+    else {
+        self.statusField.stringValue = @"";
+    }
+
+    self.connectionTimer = [NSTimer scheduledTimerWithTimeInterval:waitTimeValue
+                                                         target:self
+                                                       selector:@selector(sendConnectPing:)
+                                                       userInfo:nil
+                                                        repeats:NO];
+
+#if (MAC_OS_X_VERSION_MAX_ALLOWED > 1080)
+    if (self.versionMajor == 10 && self.versionMinor >8)
+        [self.connectionTimer setTolerance:0.2];
+#endif
+
+}
+
+- (void) stopTimeoutTimer
 {
     // stop the timer
     if (self.timeoutTimer) {
@@ -501,7 +514,33 @@
     }
 }
 
--(void) timeOut: (NSTimer *)timer
+- (void) sendConnectPing: (NSTimer *)timer
+{
+    // stop the timer
+    if (self.connectionTimer) {
+        [self.connectionTimer invalidate];
+        self.connectionTimer = nil;
+    }
+
+    NSString *status =@"";
+    self.currentBuffer=@"";
+    NSData *dataToSend = [fm_ping dataUsingEncoding: NSUTF8StringEncoding ];
+
+#ifdef DEBUG
+    NSLog(@"dataToSend : \n%@", [self dataToHex:dataToSend]);
+#endif
+    [self.serialPort sendData:dataToSend];
+    [NSThread sleepForTimeInterval:0.1f];
+    // wait for the answer
+    [self.commandQueue addObject: [NSNumber numberWithInt: PING]];
+
+    status = @"Connecting to device";
+    self.firstConnect = true;
+    [self startCommandiTmer:status  timeout:2.0];
+
+}
+
+- (void) timeOut: (NSTimer *)timer
 {
     NSString *errorMessage = @"";
     UInt16 command;

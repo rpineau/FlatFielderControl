@@ -42,6 +42,7 @@
 @property (nonatomic, strong) ORSSerialPort *serialPort;
 @property (nonatomic, strong) NSArray *availableBaudRates;
 @property (nonatomic, strong) NSTimer *timeoutTimer;
+@property (nonatomic, strong) NSTimer *connectionTimer;
 @property (nonatomic, readwrite) NSInteger versionMajor;
 @property (nonatomic, readwrite) NSInteger versionMinor;
 @property (nonatomic, readwrite) NSInteger versionBugFix;
@@ -76,7 +77,9 @@
 - (BOOL) isANumber: (NSString *)string;
 - (void) updateConnectButtonLabel;
 - (void) startTimeoutTimer: (float) timeout;
+- (void) startConnectionTimer: (NSString*)message waitTime:(float) waitTimeValue;
 - (void) stopTimeoutTimer;
+- (void) sendConnectPing: (NSTimer *)timer;
 - (void) timerOk: (NSString*)message;
 - (void) startCommandiTmer:(NSString*)message timeout:(float)timeoutValue;
 - (void) enableDisableControls: (BOOL)Enabled;
