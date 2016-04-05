@@ -10,7 +10,7 @@
 #define Flatman_Command_h
 
 enum { NONE=0, CONNECTED, PING, OPEN, CLOSE, LIGHT_ON, LIGHT_OFF, SET_BRIGHTNESS,
-    GET_BRIGHTNESS, GET_STATE, GET_VERSION
+    GET_BRIGHTNESS, GET_STATE, GET_VERSION, HALT
 };
 // 99 for Flip-Flat, 19 for Flat-Man, 10 for XL, 15 Flat-Man_L
 enum { FLIPFLAP=99, FLATMAN=19, FLATMANXL=10, FLATMANL=15};
@@ -42,6 +42,9 @@ NSString *fm_get_state_answer = @"*S";
 
 NSString *fm_get_version = @">V000\n";
 NSString *fm_get_version_answer = @"*V";
+
+NSString *fm_motor_halt = @">H000\n";
+NSString *fm_motor_halt_answer = @"*H";
 
 
 

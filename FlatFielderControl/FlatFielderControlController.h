@@ -97,5 +97,6 @@
 - (void) processFlatmanResponseGetBrightness:(NSString *)response;
 - (void) processFlatmanResponseGetState:(NSString *)response;
 - (void) processFlatmanResponseGetVersion:(NSString *)response;
+- (void) processFlatmanResponseMotorHalt:(NSString *)response;
 
 @end

@@ -398,24 +398,28 @@
 {
     NSData *dataToSend;
     UInt16 toDo;
-
+    NSString *message;
     // Do not send new command until we get the response from the previous one.
     while ([self.commandQueue queueLenght]) {
         // wait
+        [NSThread sleepForTimeInterval:0.1f];
     }
 
     if (self.flipFlatIsOpen) {
         dataToSend= [fm_close dataUsingEncoding: NSUTF8StringEncoding ];
         toDo = CLOSE;
+        message = @"Closing";
     }
     else {
         dataToSend= [fm_open dataUsingEncoding: NSUTF8StringEncoding ];
         toDo = OPEN;
+        message = @"Opening";
     }
 
     [self.serialPort sendData:dataToSend];
     // wait for the answer
     [self.commandQueue addObject: [NSNumber numberWithInt: toDo]];
+    [self startCommandiTmer: message  timeout:60.0];
 
 }
 
@@ -426,10 +430,10 @@
         // wait
     }
 
-    NSData *dataToSend = [fm_close dataUsingEncoding: NSUTF8StringEncoding ];
+    NSData *dataToSend = [fm_motor_halt dataUsingEncoding: NSUTF8StringEncoding ];
     [self.serialPort sendData:dataToSend];
     // wait for the answer
-    [self.commandQueue addObject: [NSNumber numberWithInt: CLOSE]];
+    [self.commandQueue addObject: [NSNumber numberWithInt: HALT]];
 
 }
 
@@ -687,6 +691,11 @@
         [self timerOk: @"Connected"];
         [self processFlatmanResponseGetVersion:response];
     }
+    else if ( [resp_cmd isEqualToString:fm_motor_halt_answer]) {
+        [self stopTimeoutTimer];
+        [self timerOk: @"Connected"];
+        [self processFlatmanResponseMotorHalt:response];
+    }
 
 }
 
@@ -708,14 +717,17 @@
 - (void) processFlatmanResponseOpen:(NSString *)response
 {
     // *Oii000
-    // does it replies when it's done opening ?
+    // does it replies when it's done opening or before ?
+    self.CloseButton.title = @"Close";
 
 }
 
 - (void) processFlatmanResponseClose:(NSString *)response
 {
     // *Cii000
-    // does it replies when it's done closing ?
+    // does it replies when it's done closing or before ?
+    self.CloseButton.title = @"Open";
+
 }
 
 - (void) processFlatmanResponseLightOn:(NSString *)response
@@ -797,6 +809,11 @@
     }
 }
 
+- (void) processFlatmanResponseMotorHalt:(NSString *)response
+{
+    // *Hiixxx
+    // not sure I need to do anything here.
+}
 
 #pragma mark - ORSSerialPortDelegate Methods
 
