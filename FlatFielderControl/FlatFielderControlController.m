@@ -25,7 +25,12 @@
                 self.commandQueue = nil;
             if (self.responseQueue)
                 self.responseQueue = nil;
-            self.fm_mode = NONE;
+            if(self.fm_mode != NONE) {
+                self.fm_mode = NONE;
+                [self.serialPort sendData:[fm_light_off dataUsingEncoding: [NSString defaultCStringEncoding] ]];
+                sleep(1);
+                [self.serialPort close];
+            }
             [self.serialPort close];
 
         };
@@ -85,7 +90,7 @@
         self.activity = [[NSProcessInfo processInfo] beginActivityWithOptions:0x00FFFFFF reason:@"receiving OSC messages"];
     }
 
-    // set some default
+    // set some defaults
     self.commandQueue = [[Queue alloc] init];
     self.responseQueue = [[Queue alloc] init];
     [self.Brightness setContinuous:YES];
