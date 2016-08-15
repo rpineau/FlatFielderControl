@@ -302,7 +302,8 @@
             self.currentBuffer=@"";
             NSData *dataToSend = [fm_light_off dataUsingEncoding: NSUTF8StringEncoding ];
 #ifdef DEBUG
-            NSLog(@"dataToSend : \n%@", [self dataToHex:dataToSend]);
+            NSLog(@"dataToSend      : %@\n", dataToSend);
+            NSLog(@"dataToSend [hex]: %@\n", [self dataToHex:dataToSend]);
 #endif
             [self.serialPort sendData:dataToSend];
             // wait for the answer
@@ -318,7 +319,7 @@
                 return;
         }
 
-        // connect to the focuser
+        // connect to the flatman
         // set the port speed, stopbit, ...
         self.serialPort.baudRate = [NSNumber numberWithInteger:9600];
         self.serialPort.numberOfStopBits = (NSUInteger)1;
@@ -536,7 +537,8 @@
     NSData *dataToSend = [fm_ping dataUsingEncoding: NSUTF8StringEncoding ];
 
 #ifdef DEBUG
-    NSLog(@"dataToSend : \n%@", [self dataToHex:dataToSend]);
+    NSLog(@"dataToSend      : %@\n", dataToSend);
+    NSLog(@"dataToSend [hex]: %@\n", [self dataToHex:dataToSend]);
 #endif
     [self.serialPort sendData:dataToSend];
     [NSThread sleepForTimeInterval:0.1f];
@@ -635,12 +637,12 @@
 {
     NSString *resp_cmd;
 #ifdef DEBUG
-    NSLog(@"current response buffer : \n%@", response);
-    NSLog(@"currentBuffer (hex) : %@\n", [self stringToHex:response]);
-    NSLog(@"current response len %lu", [response length]);
+    NSLog(@"current response buffer       : %@\n", response);
+    NSLog(@"current response buffer (hex) : %@\n", [self stringToHex:response]);
+    NSLog(@"current response len          : %lu\n", [response length]);
 #endif
     // all response are 7 bytes long
-    if ([response length] == 7)
+    if ([response length] >= 7)
         resp_cmd = [response substringWithRange:NSMakeRange(0,2)];
     else
         return;
@@ -707,6 +709,7 @@
 
 - (void) processFlatmanResponsePing:(NSString *)response
 {
+
     // *Pii000
     NSRange devRange = NSMakeRange (2,2);
     self.deviceType = [[response substringWithRange:devRange] intValue];
