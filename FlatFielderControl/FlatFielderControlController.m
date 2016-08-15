@@ -318,7 +318,7 @@
             if ( [self.commandQueue objectAtIndex:i] == [NSNumber numberWithInt: PING])
                 return;
         }
-
+        
         // connect to the flatman
         // set the port speed, stopbit, ...
         self.serialPort.baudRate = [NSNumber numberWithInteger:9600];
@@ -331,6 +331,7 @@
         status = @"Connecting to device";
         // 2 seconds delay after droping RTS before you can talk to the device.
         [self startConnectionTimer:status waitTime:2.0f];
+        self.shouldDisconnect = false;
     }
 
 
