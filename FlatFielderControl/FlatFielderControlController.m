@@ -356,7 +356,7 @@
     self.currentBrightness = brightness;
 
     NSMutableString *cmd = [[NSMutableString alloc] initWithString:fm_set_brightness];
-    [cmd appendFormat:@"%03d\n", brightness];
+    [cmd appendFormat:@"%03d\r\n", brightness];
     dataToSend = [cmd dataUsingEncoding: NSASCIIStringEncoding];
 #ifdef DEBUG
     NSLog(@"cmd : \n%@", cmd);
@@ -805,7 +805,7 @@
 {
     // *Viivvv
     NSString *version;
-    NSRange versionRange = NSMakeRange (3,3);
+    NSRange versionRange = NSMakeRange (4,3);
     version = [response substringWithRange:versionRange];
     self.FirmwareVersion.stringValue = version;
     if (self.firstConnect) {
