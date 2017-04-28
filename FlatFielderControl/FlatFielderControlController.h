@@ -12,6 +12,8 @@
 #import "Queue.h"
 #import "Flatman_Command.h"
 
+#define DEBUG 1
+
 @class ORSSerialPortManager;
 
 #if (MAC_OS_X_VERSION_MAX_ALLOWED <= MAC_OS_X_VERSION_10_7)

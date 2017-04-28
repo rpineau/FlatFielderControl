@@ -76,7 +76,7 @@
 
 - (NSString *)dataToHex:(NSData *)data
 {
-    NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    NSString *string = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
     const char *utf8 = [string UTF8String];
     NSMutableString *hex = [NSMutableString string];
     while ( *utf8 ) [hex appendFormat:@"%02X" , *utf8++ & 0x00FF];
@@ -259,7 +259,7 @@
         self.TurnOnButton.title = @"Turn off";
         self.lightIsOn = true;
         // get brightness.
-        NSData *dataToSend = [fm_get_brightness dataUsingEncoding: NSUTF8StringEncoding ];
+        NSData *dataToSend = [fm_get_brightness dataUsingEncoding: NSASCIIStringEncoding ];
         [self.serialPort sendData:dataToSend];
         // wait for the answer
         [self.commandQueue addObject: [NSNumber numberWithInt: GET_BRIGHTNESS]];
@@ -300,7 +300,7 @@
             [self stopTimeoutTimer];
             self.shouldDisconnect = true;
             self.currentBuffer=@"";
-            NSData *dataToSend = [fm_light_off dataUsingEncoding: NSUTF8StringEncoding ];
+            NSData *dataToSend = [fm_light_off dataUsingEncoding: NSASCIIStringEncoding ];
 #ifdef DEBUG
             NSLog(@"dataToSend      : %@\n", dataToSend);
             NSLog(@"dataToSend [hex]: %@\n", [self dataToHex:dataToSend]);
@@ -357,7 +357,7 @@
 
     NSMutableString *cmd = [[NSMutableString alloc] initWithString:fm_set_brightness];
     [cmd appendFormat:@"%03d\n", brightness];
-    dataToSend = [cmd dataUsingEncoding: NSUTF8StringEncoding];
+    dataToSend = [cmd dataUsingEncoding: NSASCIIStringEncoding];
 #ifdef DEBUG
     NSLog(@"cmd : \n%@", cmd);
     NSLog(@"dataToSend : \n%@", [self dataToHex:dataToSend]);
@@ -384,12 +384,12 @@
     }
 
     if (self.lightIsOn) {
-        dataToSend = [fm_light_off dataUsingEncoding: NSUTF8StringEncoding ];
+        dataToSend = [fm_light_off dataUsingEncoding: NSASCIIStringEncoding ];
         toDo = LIGHT_OFF;
         message = @"Truning off";
     }
     else {
-        dataToSend = [fm_light_on dataUsingEncoding: NSUTF8StringEncoding ];
+        dataToSend = [fm_light_on dataUsingEncoding: NSASCIIStringEncoding ];
         toDo = LIGHT_ON;
         message = @"Truning on";
     }
@@ -413,12 +413,12 @@
     }
 
     if (self.flipFlatIsOpen) {
-        dataToSend= [fm_close dataUsingEncoding: NSUTF8StringEncoding ];
+        dataToSend= [fm_close dataUsingEncoding: NSASCIIStringEncoding ];
         toDo = CLOSE;
         message = @"Closing";
     }
     else {
-        dataToSend= [fm_open dataUsingEncoding: NSUTF8StringEncoding ];
+        dataToSend= [fm_open dataUsingEncoding: NSASCIIStringEncoding ];
         toDo = OPEN;
         message = @"Opening";
     }
@@ -437,7 +437,7 @@
         // wait
     }
 
-    NSData *dataToSend = [fm_motor_halt dataUsingEncoding: NSUTF8StringEncoding ];
+    NSData *dataToSend = [fm_motor_halt dataUsingEncoding: NSASCIIStringEncoding ];
     [self.serialPort sendData:dataToSend];
     // wait for the answer
     [self.commandQueue addObject: [NSNumber numberWithInt: HALT]];
@@ -535,7 +535,7 @@
 
     NSString *status =@"";
     self.currentBuffer=@"";
-    NSData *dataToSend = [fm_ping dataUsingEncoding: NSUTF8StringEncoding ];
+    NSData *dataToSend = [fm_ping dataUsingEncoding: NSASCIIStringEncoding ];
 
 #ifdef DEBUG
     NSLog(@"dataToSend      : %@\n", dataToSend);
@@ -715,7 +715,7 @@
     NSRange devRange = NSMakeRange (2,2);
     self.deviceType = [[response substringWithRange:devRange] intValue];
     [self updateDeviceType: self.deviceType];
-    NSData *dataToSend = [fm_get_state dataUsingEncoding: NSUTF8StringEncoding ];
+    NSData *dataToSend = [fm_get_state dataUsingEncoding: NSASCIIStringEncoding ];
     [self.serialPort sendData:dataToSend];
     // wait for the answer
     [self.commandQueue addObject: [NSNumber numberWithInt: GET_STATE]];
@@ -746,7 +746,7 @@
     self.lightIsOn = true;
     self.Brightness.enabled = YES;
 
-    NSData *dataToSend = [fm_get_brightness dataUsingEncoding: NSUTF8StringEncoding ];
+    NSData *dataToSend = [fm_get_brightness dataUsingEncoding: NSASCIIStringEncoding ];
     [self.serialPort sendData:dataToSend];
     // wait for the answer
     [self.commandQueue addObject: [NSNumber numberWithInt: GET_BRIGHTNESS]];
@@ -792,7 +792,7 @@
     // *Siiqrs
     [self updateDeviceControls:response];
     if (self.firstConnect) {
-        NSData *dataToSend = [fm_get_version dataUsingEncoding: NSUTF8StringEncoding ];
+        NSData *dataToSend = [fm_get_version dataUsingEncoding: NSASCIIStringEncoding ];
         [self.serialPort sendData:dataToSend];
         // wait for the answer
         [self.commandQueue addObject: [NSNumber numberWithInt: GET_VERSION]];
@@ -809,7 +809,7 @@
     version = [response substringWithRange:versionRange];
     self.FirmwareVersion.stringValue = version;
     if (self.firstConnect) {
-        NSData *dataToSend = [fm_get_brightness dataUsingEncoding: NSUTF8StringEncoding ];
+        NSData *dataToSend = [fm_get_brightness dataUsingEncoding: NSASCIIStringEncoding ];
         [self.serialPort sendData:dataToSend];
         // wait for the answer
         [self.commandQueue addObject: [NSNumber numberWithInt: GET_BRIGHTNESS]];
@@ -837,7 +837,7 @@
 - (void) serialPort:(ORSSerialPort *)serialPort didReceiveData:(NSData *)data
 {
     int i;
-    NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    NSString *string = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
     if ([string length] == 0)
         return;
 #ifdef DEBUG
