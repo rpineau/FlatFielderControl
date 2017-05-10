@@ -61,6 +61,8 @@
 @property (nonatomic, readwrite) bool lightIsOn;
 @property (nonatomic, readwrite) bool flipFlatIsOpen;
 @property (strong) id activity;
+@property (nonatomic, readwrite) UInt16 lastMotorMove;
+@property (nonatomic, readwrite) bool halted;
 
 #pragma mark - Methods
 - (NSString *)stringToHex:(NSString *)string;
@@ -83,7 +85,7 @@
 - (void) stopTimeoutTimer;
 - (void) sendConnectPing: (NSTimer *)timer;
 - (void) timerOk: (NSString*)message;
-- (void) startCommandiTmer:(NSString*)message timeout:(float)timeoutValue;
+- (void) startCommandTimer:(NSString*)message timeout:(float)timeoutValue;
 - (void) enableDisableControls: (BOOL)Enabled;
 - (void) updateDeviceControls:(NSString *)response;
 

@@ -100,6 +100,8 @@
     self.currentBrightness = 0;
     self.lightIsOn = false;
     self.flipFlatIsOpen = true;
+    self.halted = false;
+    self.HaltButton.enabled = false;
     [self setControlOff];
     [self.SerialDropdown removeItemWithTitle:@"No Value"];
     [self.SerialDropdown selectItemAtIndex:0];
@@ -178,16 +180,24 @@
     switch (devType) {
         case FLIPFLAP:
             self.Device.stringValue = @"Flip-Flat";
+            self.HaltButton.enabled = false;
+            self.CloseButton.enabled = true;
             break;
         case FLATMANXL:
             self.Device.stringValue = @"Flat-Man XL";
+            self.HaltButton.enabled = false;
+            self.CloseButton.enabled = false;
             break;
         case FLATMAN:
             self.Device.stringValue = @"Flat-Man";
+            self.HaltButton.enabled = false;
+            self.CloseButton.enabled = false;
             break;
         case FLATMANL:
             self.Device.stringValue = @"Flat-Man L";
-            break;
+            self.HaltButton.enabled = false;
+            self.CloseButton.enabled = false;
+       break;
     }
 
 }
@@ -212,20 +222,27 @@
 
     if (self.deviceType == FLIPFLAP) {
         // enable open/close controls
-        self.HaltButton.enabled = true;
-        self.CloseButton.enabled = true;
         if (self.motorState) {
             self.currentMotorState.stringValue = @"Running";
+            self.HaltButton.enabled = true;
+            self.CloseButton.enabled = false;
         }
         else {
             self.currentMotorState.stringValue = @"Stopped";
+            self.HaltButton.enabled = false;
+            self.CloseButton.enabled = true;
         }
 
         switch (self.coverState ) {
             case 0:
                 self.currentCoverState.stringValue = @"not open/closed";
-                self.flipFlatIsOpen = true; // this si so that if we click on close it either close or assume it's closed
-                self.CloseButton.title = @"Close";
+                self.flipFlatIsOpen = true; // this is so that if we click on close it either close or assume it's closed
+                if(self.halted){
+                    self.CloseButton.title = @"Resume";
+                }
+                else {
+                    self.CloseButton.title = @"Close";
+                }
                 break;
 
             case 1:
@@ -253,9 +270,20 @@
     }
 
     // enable light controll, set state
-    if (self.lightState) {
+    if (self.deviceType == FLIPFLAP) {
+        if(self.coverState == 1 ) {
+            self.TurnOnButton.enabled = true;
+        }
+        else {
+            self.TurnOnButton.enabled = false;
+        }
+    }
+    else {
         self.TurnOnButton.enabled = true;
+    }
 
+
+    if (self.lightState) {
         self.TurnOnButton.title = @"Turn off";
         self.lightIsOn = true;
         // get brightness.
@@ -265,7 +293,6 @@
         [self.commandQueue addObject: [NSNumber numberWithInt: GET_BRIGHTNESS]];
     }
     else {
-        self.TurnOnButton.enabled = true;
         self.TurnOnButton.title = @"Turn on";
         self.lightIsOn = false;
     }
@@ -293,7 +320,7 @@
         self.statusField.stringValue =@"Select a serial port before clicking \"Connect\"";
         return;
     }
-
+    
     // disconnect from the focuser
     if (self.fm_mode != NONE) {
         if (self.serialPort.isOpen) {
@@ -309,7 +336,7 @@
             // wait for the answer
             [self.commandQueue addObject: [NSNumber numberWithInt: LIGHT_OFF]];
             status = @"Disconnecting from device";
-            [self startCommandiTmer:status  timeout:2.0];
+            [self startCommandTimer:status  timeout:2.0];
         }
     }
     else {
@@ -318,7 +345,6 @@
             if ( [self.commandQueue objectAtIndex:i] == [NSNumber numberWithInt: PING])
                 return;
         }
-        
         // connect to the flatman
         // set the port speed, stopbit, ...
         self.serialPort.baudRate = [NSNumber numberWithInteger:9600];
@@ -335,14 +361,12 @@
         self.shouldDisconnect = false;
     }
 
-
 }
 
 - (IBAction)updateBrightness:(id)sender
 {
     uint32_t brightness;
     NSData *dataToSend;
-
 
     brightness = self.Brightness.intValue;
     if (brightness == 0) {
@@ -368,7 +392,7 @@
 
     // wait for the answer
     [self.commandQueue addObject: [NSNumber numberWithInt: SET_BRIGHTNESS]];
-    [self startCommandiTmer: nil  timeout:2.0];
+    [self startCommandTimer: nil  timeout:2.0];
 
 }
 
@@ -377,12 +401,6 @@
     NSData *dataToSend;
     UInt16 toDo;
     NSString *message;
-
-    // Do not send new command until we get the response from the previous one.
-    while ([self.commandQueue queueLenght]) {
-        // wait
-        [NSThread sleepForTimeInterval:0.1f];
-    }
 
     if (self.lightIsOn) {
         dataToSend = [fm_light_off dataUsingEncoding: NSASCIIStringEncoding ];
@@ -398,46 +416,59 @@
     [self.serialPort sendData:dataToSend];
     // wait for the answer
     [self.commandQueue addObject: [NSNumber numberWithInt: toDo]];
-    [self startCommandiTmer: message  timeout:2.0];
+    [self startCommandTimer: message  timeout:2.0];
 
 }
 
 - (IBAction) openFlipFlat:(id)sender
 {
     NSData *dataToSend;
-    UInt16 toDo;
+    UInt16 toDo = NONE;
     NSString *message;
-    // Do not send new command until we get the response from the previous one.
-    while ([self.commandQueue queueLenght]) {
-        // wait
-        [NSThread sleepForTimeInterval:0.1f];
-    }
+    if (self.halted) {
+        switch (self.lastMotorMove) {
+            case OPEN:
+                dataToSend= [fm_open dataUsingEncoding: NSASCIIStringEncoding ];
+                toDo = OPEN;
+                message = @"Opening";
+                self.lastMotorMove = OPEN;
+                break;
 
-    if (self.flipFlatIsOpen) {
-        dataToSend= [fm_close dataUsingEncoding: NSASCIIStringEncoding ];
-        toDo = CLOSE;
-        message = @"Closing";
+            case CLOSE:
+                dataToSend= [fm_close dataUsingEncoding: NSASCIIStringEncoding ];
+                toDo = CLOSE;
+                message = @"Closing";
+                self.lastMotorMove = CLOSE;
+
+            default:
+                break;
+        }
     }
     else {
-        dataToSend= [fm_open dataUsingEncoding: NSASCIIStringEncoding ];
-        toDo = OPEN;
-        message = @"Opening";
+        if (self.flipFlatIsOpen) {
+            dataToSend= [fm_close dataUsingEncoding: NSASCIIStringEncoding ];
+            toDo = CLOSE;
+            message = @"Closing";
+            self.lastMotorMove = CLOSE;
+        }
+        else {
+            dataToSend= [fm_open dataUsingEncoding: NSASCIIStringEncoding ];
+            toDo = OPEN;
+            message = @"Opening";
+            self.lastMotorMove = OPEN;
+        }
     }
+
 
     [self.serialPort sendData:dataToSend];
     // wait for the answer
     [self.commandQueue addObject: [NSNumber numberWithInt: toDo]];
-    [self startCommandiTmer: message  timeout:60.0];
+    [self startCommandTimer: message  timeout:60.0];
 
 }
 
 - (IBAction) haltFlipFlat:(id)sender
 {
-    // Do not send new command until we get the response from the previous one.
-    while ([self.commandQueue queueLenght]) {
-        // wait
-    }
-
     NSData *dataToSend = [fm_motor_halt dataUsingEncoding: NSASCIIStringEncoding ];
     [self.serialPort sendData:dataToSend];
     // wait for the answer
@@ -512,7 +543,7 @@
 }
 
 
-- (void) startCommandiTmer: (NSString*)message timeout:(float)timeoutValue
+- (void) startCommandTimer: (NSString*)message timeout:(float)timeoutValue
 {
     [self startTimeoutTimer: timeoutValue];
     self.statusField.textColor = [NSColor blackColor];
@@ -549,7 +580,7 @@
 
     status = @"Connecting to device";
     self.firstConnect = true;
-    [self startCommandiTmer:status  timeout:2.0];
+    [self startCommandTimer:status  timeout:2.0];
 
 }
 
@@ -720,8 +751,8 @@
     [self.serialPort sendData:dataToSend];
     // wait for the answer
     [self.commandQueue addObject: [NSNumber numberWithInt: GET_STATE]];
-    [self startCommandiTmer: @"Getting state"  timeout:2.0];
-
+    [self startCommandTimer: @"Getting state"  timeout:2.0];
+    self.halted = false;
 }
 
 - (void) processFlatmanResponseOpen:(NSString *)response
@@ -736,7 +767,10 @@
     [self.serialPort sendData:dataToSend];
     // wait for the answer
     [self.commandQueue addObject: [NSNumber numberWithInt: GET_STATE]];
-    [self startCommandiTmer: @"Getting state"  timeout:2.0];
+    [self startCommandTimer: @"Getting state"  timeout:2.0];
+    self.halted = false;
+    self.HaltButton.enabled = true;
+
 
 }
 
@@ -752,7 +786,9 @@
     [self.serialPort sendData:dataToSend];
     // wait for the answer
     [self.commandQueue addObject: [NSNumber numberWithInt: GET_STATE]];
-    [self startCommandiTmer: @"Getting state"  timeout:2.0];
+    [self startCommandTimer: @"Getting state"  timeout:2.0];
+    self.halted = false;
+    self.HaltButton.enabled = true;
 }
 
 - (void) processFlatmanResponseLightOn:(NSString *)response
@@ -766,7 +802,7 @@
     [self.serialPort sendData:dataToSend];
     // wait for the answer
     [self.commandQueue addObject: [NSNumber numberWithInt: GET_BRIGHTNESS]];
-    [self startCommandiTmer: @"Getting state"  timeout:2.0];
+    [self startCommandTimer: @"Getting state"  timeout:2.0];
 
 }
 
@@ -812,15 +848,24 @@
         [self.serialPort sendData:dataToSend];
         // wait for the answer
         [self.commandQueue addObject: [NSNumber numberWithInt: GET_VERSION]];
-        [self startCommandiTmer: @"Getting firmware version"  timeout:2.0];
+        [self startCommandTimer: @"Getting firmware version"  timeout:2.0];
     }
     else {
+        NSRange lightRange = NSMakeRange (5,1);
+        self.lightState = [[response substringWithRange:lightRange] intValue];
+        
+        NSRange motorRange = NSMakeRange (4,1);
+        self.motorState = [[response substringWithRange:motorRange] intValue];
+        
+        NSRange coverRange = NSMakeRange (6,1);
+        self.coverState = [[response substringWithRange:coverRange] intValue];
+        
         if (self.motorState) {
             NSData *dataToSend = [fm_get_state dataUsingEncoding: NSASCIIStringEncoding ];
             [self.serialPort sendData:dataToSend];
             // wait for the answer
             [self.commandQueue addObject: [NSNumber numberWithInt: GET_STATE]];
-            [self startCommandiTmer: @"Getting state"  timeout:2.0];
+            [self startCommandTimer: @"Getting state"  timeout:2.0];
         }
     }
 }
@@ -837,7 +882,7 @@
         [self.serialPort sendData:dataToSend];
         // wait for the answer
         [self.commandQueue addObject: [NSNumber numberWithInt: GET_BRIGHTNESS]];
-        [self startCommandiTmer: @"Getting state"  timeout:2.0];
+        [self startCommandTimer: @"Getting state"  timeout:2.0];
         self.firstConnect = false;
     }
 }
@@ -846,6 +891,13 @@
 {
     // *Hiixxx
     // not sure I need to do anything here.
+    [self.commandQueue emptyQueue];
+    self.TurnOnButton.enabled = false;
+    self.CloseButton.title = @"Resume";
+    self.flipFlatIsOpen = false;
+    self.halted = true;
+    self.HaltButton.enabled = false;
+    
 }
 
 #pragma mark - ORSSerialPortDelegate Methods
@@ -868,9 +920,9 @@
     NSLog(@"received string : %@\n", [self stringToHex:string]);
 #endif
 
-    if(!self.responseQueue && !self.commandQueue)
+    if(!self.responseQueue || !self.commandQueue || !self.currentBuffer)
         return;
-
+    
     self.currentBuffer = [self.currentBuffer stringByAppendingString:string];
 #ifdef DEBUG
     NSLog(@"currentBuffer : %@\n", self.currentBuffer);
