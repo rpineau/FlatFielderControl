@@ -99,7 +99,7 @@
     self.shouldDisconnect = false;
     self.currentBrightness = 0;
     self.lightIsOn = false;
-    self.flipFlatIsOpen = false;
+    self.flipFlatIsOpen = true;
     [self setControlOff];
     [self.SerialDropdown removeItemWithTitle:@"No Value"];
     [self.SerialDropdown selectItemAtIndex:0];
@@ -224,7 +224,7 @@
         switch (self.coverState ) {
             case 0:
                 self.currentCoverState.stringValue = @"not open/closed";
-                self.flipFlatIsOpen = false;
+                self.flipFlatIsOpen = true; // this si so that if we click on close it either close or assume it's closed
                 self.CloseButton.title = @"Close";
                 break;
 
@@ -326,6 +326,7 @@
         self.serialPort.parity = ORSSerialPortParityNone;
         [self.serialPort open];
         self.serialPort.DTR = YES;
+        usleep(100000);
         // Drop RTS
         self.serialPort.RTS = NO;
         status = @"Connecting to device";
@@ -356,7 +357,7 @@
     self.currentBrightness = brightness;
 
     NSMutableString *cmd = [[NSMutableString alloc] initWithString:fm_set_brightness];
-    [cmd appendFormat:@"%03d\r\n", brightness];
+    [cmd appendFormat:@"%03d\n", brightness];
     dataToSend = [cmd dataUsingEncoding: NSASCIIStringEncoding];
 #ifdef DEBUG
     NSLog(@"cmd : \n%@", cmd);
@@ -728,6 +729,14 @@
     // *Oii000
     // does it replies when it's done opening or before ?
     self.CloseButton.title = @"Close";
+    self.flipFlatIsOpen = true;
+    [self updateDeviceControls: response];
+
+    NSData *dataToSend = [fm_get_state dataUsingEncoding: NSASCIIStringEncoding ];
+    [self.serialPort sendData:dataToSend];
+    // wait for the answer
+    [self.commandQueue addObject: [NSNumber numberWithInt: GET_STATE]];
+    [self startCommandiTmer: @"Getting state"  timeout:2.0];
 
 }
 
@@ -736,7 +745,14 @@
     // *Cii000
     // does it replies when it's done closing or before ?
     self.CloseButton.title = @"Open";
-
+    self.flipFlatIsOpen = false;
+    
+    [self updateDeviceControls: response];
+    NSData *dataToSend = [fm_get_state dataUsingEncoding: NSASCIIStringEncoding ];
+    [self.serialPort sendData:dataToSend];
+    // wait for the answer
+    [self.commandQueue addObject: [NSNumber numberWithInt: GET_STATE]];
+    [self startCommandiTmer: @"Getting state"  timeout:2.0];
 }
 
 - (void) processFlatmanResponseLightOn:(NSString *)response
@@ -798,7 +814,15 @@
         [self.commandQueue addObject: [NSNumber numberWithInt: GET_VERSION]];
         [self startCommandiTmer: @"Getting firmware version"  timeout:2.0];
     }
-
+    else {
+        if (self.motorState) {
+            NSData *dataToSend = [fm_get_state dataUsingEncoding: NSASCIIStringEncoding ];
+            [self.serialPort sendData:dataToSend];
+            // wait for the answer
+            [self.commandQueue addObject: [NSNumber numberWithInt: GET_STATE]];
+            [self startCommandiTmer: @"Getting state"  timeout:2.0];
+        }
+    }
 }
 
 - (void) processFlatmanResponseGetVersion:(NSString *)response

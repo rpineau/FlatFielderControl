@@ -72,7 +72,7 @@
         <window title="Flat Fielder Control" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" animationBehavior="default" id="F0z-JX-Cv5">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <rect key="contentRect" x="128" y="128" width="575" height="337"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1177"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
             <view key="contentView" id="se5-gp-TjO">
                 <rect key="frame" x="0.0" y="0.0" width="575" height="337"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -158,6 +158,9 @@
                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                         <font key="font" metaFont="system"/>
                                     </buttonCell>
+                                    <connections>
+                                        <action selector="openFlipFlat:" target="k4w-Jx-NUI" id="E6h-nJ-sdl"/>
+                                    </connections>
                                 </button>
                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YzF-bw-0gE">
                                     <rect key="frame" x="105" y="103" width="148" height="17"/>
@@ -274,7 +277,7 @@
                                     </connections>
                                 </textField>
                                 <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3kW-FI-EPh">
-                                    <rect key="frame" x="9" y="19" width="509" height="25"/>
+                                    <rect key="frame" x="9" y="19" width="509" height="27"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                     <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="255" doubleValue="128" tickMarkPosition="below" numberOfTickMarks="5" sliderType="linear" id="IRI-Ej-JJV"/>
                                     <connections>
