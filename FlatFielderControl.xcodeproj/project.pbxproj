@@ -1,0 +1,410 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		930469DE1C9DE4C600E39F0C /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 930469DD1C9DE4C600E39F0C /* IOKit.framework */; };
+		930469E01C9DE4D000E39F0C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 930469DF1C9DE4D000E39F0C /* Cocoa.framework */; };
+		930469E41C9DE5C900E39F0C /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 930469E31C9DE5C900E39F0C /* MainMenu.xib */; };
+		930469E71C9DED4800E39F0C /* FlatFielderControlController.m in Sources */ = {isa = PBXBuildFile; fileRef = 930469E61C9DED4800E39F0C /* FlatFielderControlController.m */; };
+		931E22561CAC8BC3006DD638 /* FlatFielderControl.icns in Resources */ = {isa = PBXBuildFile; fileRef = 931E22551CAC8BC3006DD638 /* FlatFielderControl.icns */; };
+		93A43D1E1C9DC94E006C8DB5 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 93A43D1D1C9DC94E006C8DB5 /* AppDelegate.m */; };
+		93A43D211C9DC94E006C8DB5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 93A43D201C9DC94E006C8DB5 /* main.m */; };
+		93A43D351C9DCB5B006C8DB5 /* Queue.m in Sources */ = {isa = PBXBuildFile; fileRef = 93A43D321C9DCB5B006C8DB5 /* Queue.m */; };
+		93EF793A1CA85FDC00E9037B /* ORSSerialBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 93EF79311CA85FDC00E9037B /* ORSSerialBuffer.m */; };
+		93EF793B1CA85FDC00E9037B /* ORSSerialPacketDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 93EF79331CA85FDC00E9037B /* ORSSerialPacketDescriptor.m */; };
+		93EF793C1CA85FDC00E9037B /* ORSSerialPort.m in Sources */ = {isa = PBXBuildFile; fileRef = 93EF79351CA85FDC00E9037B /* ORSSerialPort.m */; };
+		93EF793D1CA85FDC00E9037B /* ORSSerialPortManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 93EF79371CA85FDC00E9037B /* ORSSerialPortManager.m */; };
+		93EF793E1CA85FDC00E9037B /* ORSSerialRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 93EF79391CA85FDC00E9037B /* ORSSerialRequest.m */; };
+		93F764811CAB871900B7DE34 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 93F7647F1CAB871900B7DE34 /* Credits.rtf */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		930469DD1C9DE4C600E39F0C /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		930469DF1C9DE4D000E39F0C /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		930469E31C9DE5C900E39F0C /* MainMenu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MainMenu.xib; path = ../MainMenu.xib; sourceTree = "<group>"; };
+		930469E51C9DED4800E39F0C /* FlatFielderControlController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlatFielderControlController.h; sourceTree = "<group>"; };
+		930469E61C9DED4800E39F0C /* FlatFielderControlController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FlatFielderControlController.m; sourceTree = "<group>"; };
+		930469E81C9DED8D00E39F0C /* Flatman_Command.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Flatman_Command.h; sourceTree = "<group>"; };
+		931E22551CAC8BC3006DD638 /* FlatFielderControl.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = FlatFielderControl.icns; sourceTree = "<group>"; };
+		93A43D191C9DC94E006C8DB5 /* FlatFielderControl.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlatFielderControl.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		93A43D1C1C9DC94E006C8DB5 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		93A43D1D1C9DC94E006C8DB5 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		93A43D201C9DC94E006C8DB5 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		93A43D271C9DC94E006C8DB5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		93A43D311C9DCB5B006C8DB5 /* Queue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Queue.h; sourceTree = "<group>"; };
+		93A43D321C9DCB5B006C8DB5 /* Queue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Queue.m; sourceTree = "<group>"; };
+		93EF79301CA85FDC00E9037B /* ORSSerialBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ORSSerialBuffer.h; sourceTree = "<group>"; };
+		93EF79311CA85FDC00E9037B /* ORSSerialBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ORSSerialBuffer.m; sourceTree = "<group>"; };
+		93EF79321CA85FDC00E9037B /* ORSSerialPacketDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ORSSerialPacketDescriptor.h; sourceTree = "<group>"; };
+		93EF79331CA85FDC00E9037B /* ORSSerialPacketDescriptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ORSSerialPacketDescriptor.m; sourceTree = "<group>"; };
+		93EF79341CA85FDC00E9037B /* ORSSerialPort.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ORSSerialPort.h; sourceTree = "<group>"; };
+		93EF79351CA85FDC00E9037B /* ORSSerialPort.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ORSSerialPort.m; sourceTree = "<group>"; };
+		93EF79361CA85FDC00E9037B /* ORSSerialPortManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ORSSerialPortManager.h; sourceTree = "<group>"; };
+		93EF79371CA85FDC00E9037B /* ORSSerialPortManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ORSSerialPortManager.m; sourceTree = "<group>"; };
+		93EF79381CA85FDC00E9037B /* ORSSerialRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ORSSerialRequest.h; sourceTree = "<group>"; };
+		93EF79391CA85FDC00E9037B /* ORSSerialRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ORSSerialRequest.m; sourceTree = "<group>"; };
+		93F764801CAB871900B7DE34 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = Base; path = Base.lproj/Credits.rtf; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		93A43D161C9DC94E006C8DB5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				930469E01C9DE4D000E39F0C /* Cocoa.framework in Frameworks */,
+				930469DE1C9DE4C600E39F0C /* IOKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		930469DC1C9DE4A800E39F0C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				930469DF1C9DE4D000E39F0C /* Cocoa.framework */,
+				930469DD1C9DE4C600E39F0C /* IOKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		93A43D101C9DC94E006C8DB5 = {
+			isa = PBXGroup;
+			children = (
+				930469DC1C9DE4A800E39F0C /* Frameworks */,
+				93A43D1B1C9DC94E006C8DB5 /* FlatFielderControl */,
+				93A43D1A1C9DC94E006C8DB5 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		93A43D1A1C9DC94E006C8DB5 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				93A43D191C9DC94E006C8DB5 /* FlatFielderControl.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		93A43D1B1C9DC94E006C8DB5 /* FlatFielderControl */ = {
+			isa = PBXGroup;
+			children = (
+				93EF792F1CA85FC100E9037B /* ORSSerialPort */,
+				930469E51C9DED4800E39F0C /* FlatFielderControlController.h */,
+				930469E61C9DED4800E39F0C /* FlatFielderControlController.m */,
+				930469E81C9DED8D00E39F0C /* Flatman_Command.h */,
+				930469E31C9DE5C900E39F0C /* MainMenu.xib */,
+				93A43D311C9DCB5B006C8DB5 /* Queue.h */,
+				93A43D321C9DCB5B006C8DB5 /* Queue.m */,
+				93A43D1C1C9DC94E006C8DB5 /* AppDelegate.h */,
+				93A43D1D1C9DC94E006C8DB5 /* AppDelegate.m */,
+				93A43D271C9DC94E006C8DB5 /* Info.plist */,
+				93A43D1F1C9DC94E006C8DB5 /* Supporting Files */,
+			);
+			path = FlatFielderControl;
+			sourceTree = "<group>";
+		};
+		93A43D1F1C9DC94E006C8DB5 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				931E22551CAC8BC3006DD638 /* FlatFielderControl.icns */,
+				93F7647F1CAB871900B7DE34 /* Credits.rtf */,
+				93A43D201C9DC94E006C8DB5 /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		93EF792F1CA85FC100E9037B /* ORSSerialPort */ = {
+			isa = PBXGroup;
+			children = (
+				93EF79301CA85FDC00E9037B /* ORSSerialBuffer.h */,
+				93EF79311CA85FDC00E9037B /* ORSSerialBuffer.m */,
+				93EF79321CA85FDC00E9037B /* ORSSerialPacketDescriptor.h */,
+				93EF79331CA85FDC00E9037B /* ORSSerialPacketDescriptor.m */,
+				93EF79341CA85FDC00E9037B /* ORSSerialPort.h */,
+				93EF79351CA85FDC00E9037B /* ORSSerialPort.m */,
+				93EF79361CA85FDC00E9037B /* ORSSerialPortManager.h */,
+				93EF79371CA85FDC00E9037B /* ORSSerialPortManager.m */,
+				93EF79381CA85FDC00E9037B /* ORSSerialRequest.h */,
+				93EF79391CA85FDC00E9037B /* ORSSerialRequest.m */,
+			);
+			name = ORSSerialPort;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		93A43D181C9DC94E006C8DB5 /* FlatFielderControl */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 93A43D2A1C9DC94E006C8DB5 /* Build configuration list for PBXNativeTarget "FlatFielderControl" */;
+			buildPhases = (
+				93A43D151C9DC94E006C8DB5 /* Sources */,
+				93A43D161C9DC94E006C8DB5 /* Frameworks */,
+				93A43D171C9DC94E006C8DB5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FlatFielderControl;
+			productName = FlatFielderControl;
+			productReference = 93A43D191C9DC94E006C8DB5 /* FlatFielderControl.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		93A43D111C9DC94E006C8DB5 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0820;
+				ORGANIZATIONNAME = "RTI-Zone";
+				TargetAttributes = {
+					93A43D181C9DC94E006C8DB5 = {
+						CreatedOnToolsVersion = 7.2.1;
+						DevelopmentTeam = PB97QXVYQC;
+						ProvisioningStyle = Manual;
+					};
+				};
+			};
+			buildConfigurationList = 93A43D141C9DC94E006C8DB5 /* Build configuration list for PBXProject "FlatFielderControl" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 93A43D101C9DC94E006C8DB5;
+			productRefGroup = 93A43D1A1C9DC94E006C8DB5 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				93A43D181C9DC94E006C8DB5 /* FlatFielderControl */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		93A43D171C9DC94E006C8DB5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				930469E41C9DE5C900E39F0C /* MainMenu.xib in Resources */,
+				931E22561CAC8BC3006DD638 /* FlatFielderControl.icns in Resources */,
+				93F764811CAB871900B7DE34 /* Credits.rtf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		93A43D151C9DC94E006C8DB5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93EF793E1CA85FDC00E9037B /* ORSSerialRequest.m in Sources */,
+				93EF793C1CA85FDC00E9037B /* ORSSerialPort.m in Sources */,
+				93A43D351C9DCB5B006C8DB5 /* Queue.m in Sources */,
+				930469E71C9DED4800E39F0C /* FlatFielderControlController.m in Sources */,
+				93A43D211C9DC94E006C8DB5 /* main.m in Sources */,
+				93EF793B1CA85FDC00E9037B /* ORSSerialPacketDescriptor.m in Sources */,
+				93EF793D1CA85FDC00E9037B /* ORSSerialPortManager.m in Sources */,
+				93A43D1E1C9DC94E006C8DB5 /* AppDelegate.m in Sources */,
+				93EF793A1CA85FDC00E9037B /* ORSSerialBuffer.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		93F7647F1CAB871900B7DE34 /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				93F764801CAB871900B7DE34 /* Base */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		93A43D281C9DC94E006C8DB5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "compiler-default";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = NO;
+				CLANG_WARN_CONSTANT_CONVERSION = NO;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES;
+				CLANG_WARN_EMPTY_BODY = NO;
+				CLANG_WARN_ENUM_CONVERSION = NO;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = NO;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = NO;
+				CODE_SIGN_IDENTITY = "Developer ID Application";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = PB97QXVYQC;
+				ENABLE_NS_ASSERTIONS = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = NO;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				VALID_ARCHS = x86_64;
+			};
+			name = Debug;
+		};
+		93A43D291C9DC94E006C8DB5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "compiler-default";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = NO;
+				CLANG_WARN_CONSTANT_CONVERSION = NO;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES;
+				CLANG_WARN_EMPTY_BODY = NO;
+				CLANG_WARN_ENUM_CONVERSION = NO;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = NO;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = NO;
+				CODE_SIGN_IDENTITY = "Developer ID Application";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = PB97QXVYQC;
+				ENABLE_NS_ASSERTIONS = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = NO;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+				VALID_ARCHS = x86_64;
+			};
+			name = Release;
+		};
+		93A43D2B1C9DC94E006C8DB5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "compiler-default";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = NO;
+				CLANG_WARN_CONSTANT_CONVERSION = NO;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES;
+				CLANG_WARN_EMPTY_BODY = NO;
+				CLANG_WARN_ENUM_CONVERSION = NO;
+				CLANG_WARN_INT_CONVERSION = NO;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = NO;
+				CODE_SIGN_IDENTITY = "Developer ID Application";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = PB97QXVYQC;
+				GCC_NO_COMMON_BLOCKS = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = NO;
+				INFOPLIST_FILE = FlatFielderControl/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				"OTHER_CFLAGS[arch=*]" = "-DDEBUG";
+				"OTHER_CPLUSPLUSFLAGS[arch=*]" = "$(OTHER_CFLAGS)";
+				PRODUCT_BUNDLE_IDENTIFIER = RTIZ.FlatFielderControl;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		93A43D2C1C9DC94E006C8DB5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "compiler-default";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = NO;
+				CLANG_WARN_CONSTANT_CONVERSION = NO;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES;
+				CLANG_WARN_EMPTY_BODY = NO;
+				CLANG_WARN_ENUM_CONVERSION = NO;
+				CLANG_WARN_INT_CONVERSION = NO;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = NO;
+				CODE_SIGN_IDENTITY = "Developer ID Application";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = PB97QXVYQC;
+				GCC_NO_COMMON_BLOCKS = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = NO;
+				INFOPLIST_FILE = FlatFielderControl/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				PRODUCT_BUNDLE_IDENTIFIER = RTIZ.FlatFielderControl;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		93A43D141C9DC94E006C8DB5 /* Build configuration list for PBXProject "FlatFielderControl" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				93A43D281C9DC94E006C8DB5 /* Debug */,
+				93A43D291C9DC94E006C8DB5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		93A43D2A1C9DC94E006C8DB5 /* Build configuration list for PBXNativeTarget "FlatFielderControl" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				93A43D2B1C9DC94E006C8DB5 /* Debug */,
+				93A43D2C1C9DC94E006C8DB5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 93A43D111C9DC94E006C8DB5 /* Project object */;
+}
