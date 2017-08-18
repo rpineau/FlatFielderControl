@@ -197,6 +197,10 @@
             self.Device.stringValue = @"Flat-Man L";
             self.HaltButton.enabled = false;
             self.CloseButton.enabled = false;
+        case FLATMASK:
+            self.Device.stringValue = @"Flat-Mask / Dust Cover";
+            self.HaltButton.enabled = false;
+            self.CloseButton.enabled = true;
        break;
     }
 
@@ -220,7 +224,7 @@
     NSRange coverRange = NSMakeRange (6,1);
     self.coverState = [[response substringWithRange:coverRange] intValue];
 
-    if (self.deviceType == FLIPFLAP) {
+    if (self.deviceType == FLIPFLAP || self.deviceType == FLATMASK) {
         // enable open/close controls
         if (self.motorState) {
             self.currentMotorState.stringValue = @"Running";
@@ -277,6 +281,9 @@
         else {
             self.TurnOnButton.enabled = false;
         }
+    }
+    else if (self.deviceType == FLATMASK) {
+        self.TurnOnButton.enabled = false;
     }
     else {
         self.TurnOnButton.enabled = true;
