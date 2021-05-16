@@ -12,7 +12,7 @@
 #import "Queue.h"
 #import "Flatman_Command.h"
 
-#define DEBUG 1
+// #define DEBUG 1
 
 @class ORSSerialPortManager;
 
