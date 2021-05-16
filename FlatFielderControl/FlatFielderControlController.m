@@ -382,6 +382,7 @@
 
     // Do not send new command until we get the response from the previous one.
     if ([self.commandQueue queueLenght]) {
+        usleep(40000);
         return;
     }
 
@@ -610,7 +611,7 @@
                 errorMessage = @"Error connecting to the device";
             }
             else {
-                errorMessage = @"Error pingingthe device";
+                errorMessage = @"Error pinging the device";
             }
             break;
 

@@ -252,14 +252,12 @@ static ORSSerialPortManager *sharedInstance = nil;
 	NSMutableArray *ports = [NSMutableArray array];
 	io_object_t eachPort;
 	while ((eachPort = IOIteratorNext(self.portPublishedNotificationIterator)))
-    {
-        ORSSerialPort *port = [ORSSerialPort serialPortWithDevice:eachPort];
-        if ([port.name rangeOfString:@"bluetooth" options:NSCaseInsensitiveSearch].location == NSNotFound) {
-            [ports addObject:port];
-        }
-        IOObjectRelease(eachPort);
-    }
-
+	{
+		ORSSerialPort *port = [ORSSerialPort serialPortWithDevice:eachPort];
+		if (port) [ports addObject:port];
+		IOObjectRelease(eachPort);
+	}
+	
 	self.availablePorts = ports;
 	
 	// Also register for removal
@@ -282,8 +280,10 @@ static ORSSerialPortManager *sharedInstance = nil;
 	
 	self.portTerminatedNotificationIterator = portIterator;
 	IOObjectRelease(portIterator);
-	
-	while (IOIteratorNext(self.portTerminatedNotificationIterator)) {}; // Run out the iterator or notifications won't start
+
+	io_object_t device;
+	// Run out the iterator or notifications won't start
+	while ((device = IOIteratorNext(self.portTerminatedNotificationIterator))) { IOObjectRelease(device); }
 }
 
 #pragma mark - Properties
